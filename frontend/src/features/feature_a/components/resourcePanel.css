@@ -1,0 +1,272 @@
+.res-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  background: var(--deep);
+  border-left: 1px solid var(--truss);
+  box-shadow: -12px 0 32px rgb(0 0 0 / 0.45);
+  z-index: 10;
+}
+.res-head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.res-meta { display: grid; gap: 4px; min-width: 0; }
+.res-meta h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.25; text-wrap: balance; }
+.res-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--open);
+}
+/* 트리 위치: 각 단계를 누르면 트리에서 그 카드를 보여 준다 */
+.res-trail { display: flex; flex-wrap: wrap; min-width: 0; }
+.res-trail button {
+  font: inherit;
+  color: var(--muted);
+  background: none;
+  border: none;
+  padding: 2px 0;
+  cursor: pointer;
+}
+.res-trail button + button::before { content: '›'; padding: 0 6px; color: var(--truss); }
+.res-trail button:hover { color: var(--fg); text-decoration: underline; text-underline-offset: 3px; }
+.res-trail button:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+
+/* 좁은 화면: 화면 전체를 덮지 않고 아래 시트로. 위쪽 띠에 트리 미니맵이 남는다 (reveal.ts SHEET_TOP과 같은 값) */
+@media (max-width: 999px) {
+  .res-panel:not(.full) {
+    top: 34vh;
+    left: 0;
+    width: 100vw !important;
+    border-left: none;
+    border-top: 1px solid var(--truss);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -12px 32px rgb(0 0 0 / 0.45);
+  }
+  .res-panel .resize-handle { display: none; }
+}
+.res-head-buttons { display: flex; gap: 6px; flex: none; }
+.icon-btn {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  color: var(--fg);
+  background: var(--metal);
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.res-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.res-actions a,
+.res-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--metal);
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  padding: 7px 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+/* 이 탭의 주 동작: 노트북 = 다음 단계, 매뉴얼 = 다운로드 */
+.res-actions .primary {
+  font-weight: 600;
+  color: var(--void);
+  background: var(--action);
+  border-color: var(--action);
+}
+.next-icon { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+
+.icon-btn:hover { border-color: var(--muted); }
+.icon-btn:focus-visible,
+.res-actions button:focus-visible,
+.res-actions a:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+.res-viewer {
+  flex: 1;
+  width: 100%;
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  background: #fff;
+}
+
+/* 전체 화면 */
+.res-panel.full {
+  left: 0;
+  width: 100vw;
+  border-left: none;
+}
+
+/* 너비 조절 손잡이: 패널 왼쪽 가장자리 */
+.resize-handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -5px;
+  width: 10px;
+  cursor: col-resize;
+  touch-action: none;
+  outline: none;
+}
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 4px;
+  height: 48px;
+  transform: translateY(-50%);
+  border-radius: 2px;
+  background: var(--truss);
+}
+.resize-handle:hover::after,
+.resize-handle:focus-visible::after,
+.res-panel.dragging .resize-handle::after { background: var(--open); }
+/* 드래그 중에는 PDF가 마우스를 가로채지 않게 한다 */
+.res-panel.dragging .res-viewer { pointer-events: none; }
+.res-panel.dragging { user-select: none; }
+.icon-btn.text {
+  width: auto;
+  padding: 0 12px;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+/* 매뉴얼 | 노트북 탭 */
+.res-tabs {
+  display: flex;
+  gap: 2px;
+  border-bottom: 1px solid var(--truss);
+}
+.res-tabs button {
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.res-tabs button[aria-selected='true'] {
+  color: var(--fg);
+  border-bottom-color: var(--open);
+}
+.res-tabs button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+
+.res-guide {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 15px;
+  line-height: 1.6;
+  line-height: 1.5;
+  color: var(--fg);
+}
+.res-guide .muted { color: var(--muted); }
+/* 자료 보기 영역: 로딩 · 오류 상태를 iframe 위에 겹쳐 보여 준다 */
+.res-viewer-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.res-viewer-wrap[hidden] { display: none; }
+/* 준비되기 전에는 흰 화면이 번쩍이지 않게 숨겨 둔다 (불러오기는 계속된다) */
+.res-viewer.pending { visibility: hidden; }
+.viewer-state {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+  padding: 24px;
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  background: var(--metal);
+}
+.viewer-title { margin: 0; font-size: 18px; font-weight: 700; color: var(--fg); }
+.viewer-text { margin: 0; max-width: 46ch; font-size: 14px; line-height: 1.6; color: var(--muted); }
+.viewer-state.error { border-color: var(--alert); }
+.viewer-state.error .viewer-title { color: var(--alert); }
+/* 끝을 알 수 없는 작업이라 진행률 대신 흐르는 막대 */
+.viewer-bar {
+  position: relative;
+  width: 160px;
+  height: 3px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--truss);
+}
+.viewer-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  border-radius: 2px;
+  background: var(--open);
+  animation: viewer-flow 1.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+}
+@keyframes viewer-flow {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(250%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer-bar::after { animation: none; width: 100%; opacity: 0.5; }
+}
+.viewer-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.viewer-actions a,
+.viewer-actions button {
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--fg);
+  background: var(--deep);
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  padding: 7px 12px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.viewer-actions .primary { font-weight: 600; color: var(--void); background: var(--action); border-color: var(--action); }
+.viewer-actions a:focus-visible,
+.viewer-actions button:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+
+/* 저장 안 됨 경고: 다운로드 옆에 또렷하게 */
+.res-note {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 14px;
+  color: var(--fg);
+}
+
+/* 긴 제목·경로도 패널 밖으로 넘치지 않게 */
+.res-meta h2 { overflow-wrap: anywhere; }
+
+/* 좁은 화면 시트: 머리를 줄여 노트북이 보이는 공간을 늘린다 */
+@media (max-width: 999px) {
+  .res-panel:not(.full) { gap: 8px; padding: 12px 12px 0; }
+  .res-panel:not(.full) .res-trail { flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+  .res-panel:not(.full) .res-guide { display: none; }
+  .res-panel:not(.full) .res-actions a[target='_blank'] { display: none; }
+}

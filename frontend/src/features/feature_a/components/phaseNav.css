@@ -1,0 +1,75 @@
+/* Phase 바로 가기 막대.
+   넓은 화면: 본문 밖, 화면 왼쪽 가장자리 세로 가운데에 고정 (본문은 --rail-space만큼 비켜 있다)
+   좁은 화면(700px 미만): 트리 위 가로 막대 */
+.phase-nav {
+  position: fixed;
+  left: max(32px, env(safe-area-inset-left, 0px));
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 72px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+.phase-nav-label {
+  flex: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.phase-nav ol {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  min-width: 0; /* flex 항목이 버튼 폭보다 줄어들 수 있어야 막대 안에서 넘긴다 (안 그러면 페이지가 넓어진다) */
+}
+.phase-nav button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+  background: var(--metal);
+  border: 1px solid var(--truss);
+  border-radius: 4px;
+  white-space: nowrap;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+}
+.phase-nav button:hover { border-color: var(--muted); }
+.phase-nav button.on { background: var(--fg); color: var(--void); border-color: var(--fg); }
+/* 팀 강조 중 고른 팀이 없는 Phase: 트리처럼 어둡게 */
+.phase-nav button.dim { opacity: 0.35; }
+.phase-nav button:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+.phase-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--node); }
+
+@media (max-width: 699px) {
+  .phase-nav {
+    position: sticky;
+    left: auto;
+    transform: none;
+    width: auto;
+    top: env(safe-area-inset-top, 0px);
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding-block: 8px;
+    background: var(--void);
+    border-bottom: 1px solid var(--truss);
+  }
+  .phase-nav ol {
+    flex-direction: row;
+    overflow-x: auto; /* 막대 안에서 가로로 넘긴다 */
+    scrollbar-width: none;
+  }
+  .phase-nav button { width: auto; min-height: 34px; }
+}

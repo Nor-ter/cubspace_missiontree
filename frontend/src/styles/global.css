@@ -1,0 +1,79 @@
+/* 색과 글꼴 토큰: 우주(어두운 배경) 한 가지 테마만 쓴다 */
+:root {
+  /* 바탕: 관제실 화면처럼 잉크빛 남회색. 순수한 검정은 쓰지 않는다 */
+  --void: #10151c;
+  --deep: #161c25;
+  --metal: #1c232e;
+  --truss: #333d4b;
+  --panel: #182134;
+  --fg: #f1f3f6;
+  --muted: #aeb7c3;
+  /* 노드: 모든 노드가 Melbourne Space Program 파랑(보라) 한 색
+     원색은 어두운 배경에서 어두워서, 선과 글자에는 밝힌 색을 쓴다 (대비 확보) */
+  --node: #533aec;
+  --node-line: #7e6bf1;
+  --node-text: #a99cf6;
+  /* 패널에 열린 자료와 그 경로: 보라 노드와 확실히 구별되는 앰버 */
+  --open: #dca54a;
+  /* 팀(Subsystem) 강조 색: 어두운 배경에서 밝기를 비슷하게 맞추고, 앰버(보는 중)와 겹치는 노랑·주황은 피한다 */
+  --team-sys: #5b9df5;
+  --team-box: #44c48f;
+  --team-eps: #b5d75a;
+  --team-adcs: #e06fc8;
+  --team-com: #f07070;
+  --team-obc: #5fd3e0;
+  --team-pay: #a88cff;
+  /* 위성 금박(MLI): 위성 재질과 단체 표시에만 쓴다 (버튼에는 쓰지 않는다) */
+  --foil: #c8a256;
+  /* 역할 색 */
+  --action: #dca54a; /* 주 동작 버튼과 포커스 표시 */
+  --alert: #e8806e; /* 오류 */
+  /* Jost: Melbourne Space Program 사이트의 Futura 계열과 같은 기하학적 산세리프 (무료, 프로젝트에 포함) */
+  --font-body: 'Jost Variable', 'Jost', 'Futura', 'Century Gothic', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  --rail-space: 120px; /* 화면 왼쪽에 고정된 Phase 막대가 차지하는 폭: 왼쪽 여백 32 + 막대 72 + 본문 앞 여백 16 */
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--void);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 450; /* Jost는 작은 크기에서 가늘어 보여 기본 굵기를 조금 올린다 */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 버튼은 기본으로 글꼴을 물려받지 않는다 */
+button { font: inherit; }
+
+/* 숫자가 바뀌어도 자리 폭이 흔들리지 않게 (배율) */
+.num { font-variant-numeric: tabular-nums; }
+
+::selection { background: rgb(83 58 236 / 0.55); color: #ffffff; }
+
+.star-field {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 지구: 화면 오른쪽 아래 모서리에 고정. 콘텐츠(.page)가 그 위로 지나간다 */
+.earth {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: clamp(220px, 38vw, 560px);
+  height: auto;
+  aspect-ratio: 1;
+  pointer-events: none;
+}
+.earth-atmosphere { fill: none; stroke: #8fb4d8; stroke-opacity: 0.3; stroke-width: 0.6; }
