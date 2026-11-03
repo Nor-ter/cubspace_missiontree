@@ -1,0 +1,405 @@
+/* 옆 패널: 상세도 오른쪽에 붙어 화면 높이를 채운다 */
+
+.panel {
+  position: sticky;
+  top: 52px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 52px);
+  min-width: 0;
+  border-left: 1px solid var(--line-2);
+  background: var(--paper);
+}
+
+.panel-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  padding: 14px 20px 12px;
+}
+
+.panel-crumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+}
+
+.panel-crumb .icon {
+  width: 12px;
+  height: 12px;
+}
+
+.panel-actions {
+  display: flex;
+  gap: 4px;
+  grid-row: span 2;
+  align-self: start;
+}
+
+.panel-title {
+  font-size: var(--t-2xl);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.panel-code {
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+}
+
+.panel-full {
+  grid-column: 1 / -1;
+  max-width: 70ch;
+  color: var(--ink-2);
+  font-size: var(--t-md);
+}
+
+.panel-card {
+  margin-left: 4px;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+  white-space: nowrap;
+}
+
+/* 탭: 한 줄로 이어진 단계 막대 |Manual > Notebook > Tasks >. 왼쪽 끝은 곧고, 탭의 오른쪽 끝마다 화살표라
+   왼쪽에서 오른쪽으로 배우는 순서가 읽힌다. 화살표는 작은 SVG 선(.tab-tip)으로 그려 끊기지 않는다 */
+.tabs {
+  display: flex;
+  align-items: flex-end;
+  padding: 8px 20px 0;
+  border-bottom: 1.5px solid var(--ink);
+}
+
+.tab {
+  --edge: var(--line-2);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 12px 0 14px;
+  border: 0;
+  border-top: 1.5px solid var(--edge);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-md);
+  font-weight: 500;
+}
+
+.tab + .tab {
+  padding-left: 25px; /* 앞 탭의 화살표가 들어오는 자리 */
+}
+
+.tab:first-of-type {
+  border-left: 1.5px solid var(--edge);
+}
+
+.tab:last-of-type {
+  margin-right: 13px; /* 마지막 화살표가 들어갈 자리 */
+}
+
+.tab-tip {
+  position: absolute;
+  z-index: 1;
+  top: -1.5px;
+  left: 100%;
+  width: 13px;
+  height: 38px;
+  overflow: visible;
+}
+
+.tab-tip path {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1.5;
+}
+
+.tab-tip[data-active] path {
+  stroke: var(--ink);
+}
+
+.tab:hover {
+  color: var(--ink);
+}
+
+/* 지금 단계: 먹색 테두리, 아래 기준선을 덮어 아래 내용과 이어진다 */
+.tab[aria-selected='true'] {
+  --edge: var(--ink);
+  height: 37.5px;
+  margin-bottom: -1.5px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.tab-count {
+  color: var(--ink-2);
+  font-size: var(--t-xs);
+}
+
+.panel-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: auto;
+}
+
+.tasks {
+  padding: 8px 20px 24px;
+}
+
+.task {
+  display: grid;
+  grid-template-columns: 3.2em minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.task-code {
+  padding-top: 1px;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+.task-text {
+  display: grid;
+  gap: 2px;
+}
+
+.task-name {
+  font-weight: 600;
+}
+
+.task-full {
+  max-width: 70ch;
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+}
+
+/* 자료 보기: 위에 이름 줄, 아래를 자료가 채운다 */
+.resource {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.resource-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.resource-name {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-narrow);
+  font-size: var(--t-md);
+  font-weight: 500;
+}
+
+.nb-switch {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+
+.nb-switch button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+}
+
+.nb-switch button:hover {
+  border-color: var(--ink);
+}
+
+.nb-switch button[aria-pressed='true'] {
+  border-color: var(--select-bg);
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+.nb-code {
+  font-weight: 600;
+}
+
+.guide {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper-2);
+  color: var(--ink-2);
+  font-size: var(--t-sm);
+}
+
+.guide-next {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.viewer {
+  position: relative;
+  flex: 1;
+  min-height: 420px;
+}
+
+.viewer iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: var(--paper);
+  opacity: 0;
+}
+
+.viewer iframe[data-ready] {
+  opacity: 1;
+  transition: opacity 200ms;
+}
+
+.viewer-state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 6px;
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.viewer-bar {
+  position: relative;
+  width: 160px;
+  height: 2px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.viewer-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--ink);
+  animation: viewer-scan 1.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes viewer-scan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+.viewer-title {
+  font-size: var(--t-lg);
+  font-weight: 600;
+}
+
+.viewer-title.error {
+  color: var(--alert);
+}
+
+.viewer-text {
+  color: var(--ink-2);
+}
+
+.viewer-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+/* 비어 있는 자료: 빈 칸 기호로 시작해, 무엇이 어디에 들어오는지 알려 준다 */
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  max-width: 480px;
+  padding: 40px 20px;
+}
+
+.empty-slot {
+  width: 28px;
+  height: 28px;
+  margin-bottom: 8px;
+  border: 1.5px dashed var(--line-2);
+}
+
+.empty-title {
+  font-size: var(--t-lg);
+  font-weight: 600;
+  text-wrap: balance;
+}
+
+.empty-text {
+  color: var(--ink-2);
+}
+
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewer-bar::after {
+    animation: none;
+    width: 100%;
+    opacity: 0.4;
+  }
+}
+
+/* 좁은 화면: 패널이 화면 전체를 덮는다 */
+@media (max-width: 1000px) {
+  .panel {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    height: auto;
+    border-left: 0;
+    box-shadow: 0 -8px 32px rgb(0 0 0 / 0.18);
+  }
+}

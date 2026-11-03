@@ -12,7 +12,12 @@ export const TEAMS = [
   { code: 'PAY', name: 'Payload' },
 ] as const
 
+// 팀 번호: 도면의 부품 번호 풍선처럼, 팀 순서대로 1~7
+export const teamNumber = (code: string) => TEAMS.findIndex((t) => t.code === code) + 1
+
 export const teamColor = (code: string) => `var(--team-${code.toLowerCase()})`
+// 레이어색으로 채운 풍선 위 숫자색 (밝은 색 위에는 먹, 어두운 색 위에는 종이)
+export const teamOn = (code: string) => `var(--team-${code.toLowerCase()}-on)`
 
 // 노드 id → 소속 팀 (Subsystem과 그 아래 Task, Subtask). Mission과 Phase는 팀이 없다.
 export function buildTeamMap(root: MissionNode): Map<string, string> {

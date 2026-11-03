@@ -1,0 +1,165 @@
+/* 미니맵: 오른쪽 아래 고정. 불이 켜진 곳은 먹색, 나머지는 연한 선 */
+
+.minimap {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  border: 1.5px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.14);
+}
+
+.minimap-toggle {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink-2);
+}
+
+.minimap-toggle:hover {
+  color: var(--ink);
+}
+
+.minimap-toggle .icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* 접었을 때: 작은 "Map" 단추만 */
+.minimap.collapsed .minimap-toggle {
+  position: static;
+  height: 30px;
+  padding: 0 12px;
+}
+
+.minimap-chip {
+  font-size: var(--t-sm);
+  font-weight: 600;
+}
+
+.minimap-map {
+  display: block;
+}
+
+.minimap-map text {
+  dominant-baseline: central;
+  text-anchor: middle;
+  fill: var(--line-2);
+  font-family: var(--font);
+  font-size: 9px;
+  font-weight: 600;
+  transition: fill 200ms;
+}
+
+.mm-line {
+  stroke: var(--line);
+  stroke-width: 1;
+  transition: stroke 200ms;
+}
+
+.mm-line.on {
+  stroke: var(--ink);
+}
+
+.mm-station {
+  cursor: pointer;
+}
+
+.mm-station .mm-shape {
+  fill: var(--paper);
+  stroke: var(--line);
+  stroke-width: 1.25;
+  transition: stroke 200ms, fill 200ms;
+}
+
+.mm-station .globe {
+  display: var(--station-globe);
+}
+
+.mm-station .sat {
+  display: var(--station-wings);
+}
+
+.mm-station text.small {
+  font-size: 6.5px;
+}
+
+.mm-station.on .mm-shape {
+  stroke: var(--ink);
+}
+
+.mm-station.on text {
+  fill: var(--ink);
+}
+
+/* 마우스를 올렸을 때: 도면의 Phase 단추와 같은 색 (낮 = 하늘색, 밤 = 먹 반전) */
+.mm-station:hover .mm-shape {
+  fill: var(--station-hover-bg);
+  stroke: var(--ink);
+}
+
+.mm-station:hover text {
+  fill: var(--station-hover-fg);
+}
+
+.mm-team circle {
+  fill: var(--paper);
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.mm-team .mm-tick {
+  stroke: var(--line);
+}
+
+.mm-team > .mm-num {
+  font-size: 6px;
+}
+
+/* 불이 켜진 팀: 그 팀의 레이어색으로 (풍선은 채우고 숫자는 채운 색에 맞춘 --on) */
+.mm-team.on circle {
+  fill: var(--c);
+  stroke: var(--c);
+}
+
+.mm-team.on .mm-tick {
+  stroke: var(--c);
+}
+
+/* 팀에 불이 켜져도 그 팀의 Workshop 코드는 따로 켠다 (지금 연 Workshop만) */
+.mm-team.on > .mm-num {
+  fill: var(--on);
+}
+
+.minimap-map text.mm-leaf {
+  text-anchor: start;
+  font-size: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+/* 켜진 코드: 팀 색을 먹 쪽으로 섞어 작은 글자에서도 읽히게 (밝은 화면의 노랑도 진해진다) */
+.minimap-map text.mm-leaf.on {
+  fill: color-mix(in oklab, var(--c) 62%, var(--ink)); /* oklab: 색상이 돌지 않게 (oklch로 섞으면 노랑이 초록이 된다) */
+  font-weight: 600;
+}
+
+.minimap-map text.mm-leaf:hover {
+  fill: var(--ink-2);
+  text-decoration: underline;
+}
+
+@media (max-width: 1000px) {
+  .minimap {
+    display: none;
+  }
+}

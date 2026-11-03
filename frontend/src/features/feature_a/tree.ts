@@ -91,3 +91,26 @@ export function nextNotebook(node: MissionNode, parents: Map<string, MissionNode
   const siblings = parents.get(node.id)?.children ?? []
   return siblings.slice(siblings.indexOf(node) + 1).find((c) => c.notebook)
 }
+
+// Workshop(Task)의 PM 카드 id: detail이 "TC-ADCS-A2 원문 제목" 형식이다
+export const cardId = (node: MissionNode) => node.detail?.split(' ')[0] ?? node.id
+
+// PM 원문 제목 (카드 id를 뺀 부분)
+export const cardTitle = (node: MissionNode) => node.detail?.split(' ').slice(1).join(' ') ?? node.title
+
+// PM 카드 id로 Workshop을 찾는다 (주소창의 #/A/TC-ADCS-A2 처럼)
+export function findWorkshop(root: MissionNode, id: string): MissionNode | undefined {
+  for (const phase of root.children ?? [])
+    for (const team of phase.children ?? [])
+      for (const ws of team.children ?? []) if (cardId(ws) === id) return ws
+  return undefined
+}
+
+// Workshop에 딸린 노트북: Workshop 자신(따라 하기) → Task들(직접 해 보기) 순서
+export const notebooksOf = (ws: MissionNode) => [ws, ...(ws.children ?? [])].filter((n) => n.notebook)
+
+// 자료 칸을 읽어 주는 말 (화면 낭독기용)
+export function slotLabel(manual: boolean, notebook: boolean) {
+  const has = [manual && 'manual', notebook && 'notebook'].filter(Boolean)
+  return has.length ? `has ${has.join(' and ')}` : 'no material yet'
+}

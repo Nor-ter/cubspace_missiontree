@@ -1,0 +1,246 @@
+.topbar {
+  view-transition-name: topbar; /* 화면 전환 중에도 위 막대는 그 자리에 남는다 */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  min-height: 52px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.wordmark {
+  color: var(--ink);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mission-id {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 24px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+
+.mission-label {
+  color: var(--ink-2);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.mission-name {
+  font-family: var(--font-narrow);
+  font-size: var(--t-md);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.cohort select {
+  min-height: 30px;
+  padding: 0 26px 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  appearance: none;
+  cursor: pointer;
+}
+
+/* 펼침 표시: 테마 색을 따르도록 마스크로 그린다 */
+.cohort {
+  position: relative;
+}
+
+.cohort::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  width: 14px;
+  height: 14px;
+  background: var(--ink-2);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='black' stroke-width='1.5'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.cohort select:hover {
+  border-color: var(--ink);
+}
+
+.orient {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+}
+
+/* 낮 / 밤 / Auto: 방향 버튼과 같은 모양의 붙은 버튼 */
+.theme-switch {
+  display: flex;
+  align-items: center;
+}
+
+.orient + .theme-switch {
+  margin-left: 14px;
+}
+
+.theme-switch:first-child,
+.mission-id + .theme-switch {
+  margin-left: auto;
+}
+
+/* 아이콘만: 위 막대가 넘치지 않게 (이름은 마우스를 올리면 보인다) */
+.theme-switch button {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  min-height: 30px;
+  padding: 0;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+
+.theme-switch button + button {
+  margin-left: -1px;
+}
+
+.theme-switch button:hover {
+  position: relative;
+  border-color: var(--ink);
+}
+
+.theme-switch button[aria-pressed='true'] {
+  position: relative;
+  border-color: var(--select-bg);
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+.theme-switch .icon .fill {
+  fill: currentColor;
+  stroke: none;
+}
+
+.night-glyph .orbit {
+  stroke-width: 1;
+  opacity: 0.7;
+}
+
+.night-glyph .sat {
+  fill: currentColor;
+  stroke: none;
+}
+
+.orient button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 0 10px 0 8px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 500;
+}
+
+.orient button + button {
+  margin-left: -1px;
+}
+
+.orient button:hover {
+  border-color: var(--ink);
+  position: relative;
+}
+
+.orient button[aria-pressed='true'] {
+  position: relative;
+  border-color: var(--select-bg);
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+.layers {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.orient + .layers {
+  margin-left: 20px;
+}
+
+.layers-label {
+  margin-right: 6px;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+}
+
+.layer {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 32px;
+  padding: 0 8px 0 5px;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: none;
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  transition: border-color 150ms, background-color 150ms;
+}
+
+.layer:hover {
+  border-color: var(--line-2);
+}
+
+.layer[aria-pressed='true'] {
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+
+@media (max-width: 1100px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    padding: 8px 16px;
+  }
+
+  .mission-id {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .orient {
+    display: none;
+  }
+
+  .theme-switch {
+    margin-left: auto;
+  }
+
+  .layers {
+    order: 3;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-left: 0;
+  }
+}

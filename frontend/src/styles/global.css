@@ -1,36 +1,106 @@
-/* 색과 글꼴 토큰: 우주(어두운 배경) 한 가지 테마만 쓴다 */
+/* 색과 글꼴 토큰: 설계 도면 한 장, 그 도면이 놓인 시간대.
+   낮(밝은 테마) = 맑은 낮 하늘 아래 흰 종이에 출력한 도면.
+   밤(어두운 테마) = 인공위성이 떠 있는 밤하늘 아래, 별빛 같은 선으로 그린 도면.
+   위 막대의 Day / Night / Auto로 고르고, Auto면 컴퓨터 설정을 따른다.
+   화면에 적용되는 값은 늘 data-theme="day" | "night" 하나다 (features/feature_a/theme.ts) */
 :root {
-  /* 바탕: 관제실 화면처럼 잉크빛 남회색. 순수한 검정은 쓰지 않는다 */
-  --void: #10151c;
-  --deep: #161c25;
-  --metal: #1c232e;
-  --truss: #333d4b;
-  --panel: #182134;
-  --fg: #f1f3f6;
-  --muted: #aeb7c3;
-  /* 노드: 모든 노드가 Melbourne Space Program 파랑(보라) 한 색
-     원색은 어두운 배경에서 어두워서, 선과 글자에는 밝힌 색을 쓴다 (대비 확보) */
-  --node: #533aec;
-  --node-line: #7e6bf1;
-  --node-text: #a99cf6;
-  /* 패널에 열린 자료와 그 경로: 보라 노드와 확실히 구별되는 앰버 */
-  --open: #dca54a;
-  /* 팀(Subsystem) 강조 색: 어두운 배경에서 밝기를 비슷하게 맞추고, 앰버(보는 중)와 겹치는 노랑·주황은 피한다 */
-  --team-sys: #5b9df5;
-  --team-box: #44c48f;
-  --team-eps: #b5d75a;
-  --team-adcs: #e06fc8;
-  --team-com: #f07070;
-  --team-obc: #5fd3e0;
-  --team-pay: #a88cff;
-  /* 위성 금박(MLI): 위성 재질과 단체 표시에만 쓴다 (버튼에는 쓰지 않는다) */
-  --foil: #c8a256;
-  /* 역할 색 */
-  --action: #dca54a; /* 주 동작 버튼과 포커스 표시 */
-  --alert: #e8806e; /* 오류 */
-  /* Jost: Melbourne Space Program 사이트의 Futura 계열과 같은 기하학적 산세리프 (무료, 프로젝트에 포함) */
-  --font-body: 'Jost Variable', 'Jost', 'Futura', 'Century Gothic', -apple-system, 'Apple SD Gothic Neo', sans-serif;
-  --rail-space: 120px; /* 화면 왼쪽에 고정된 Phase 막대가 차지하는 폭: 왼쪽 여백 32 + 막대 72 + 본문 앞 여백 16 */
+  /* 종이와 먹: 차가운 흰 종이 위의 흑연색 선. 크림색은 쓰지 않는다 */
+  --paper: oklch(0.985 0.004 240);
+  --paper-2: oklch(0.962 0.006 240); /* 패널 · 표제란처럼 한 겹 위의 면 */
+  /* 하늘: 도면(시트) 바깥의 바탕. 낮에는 옅은 낮 하늘색이라 도면 한 장이 하늘 아래 놓인 것처럼 보인다 */
+  --desk: oklch(0.9 0.035 232);
+  --sky-art: none; /* 밤하늘의 별 (밤 토큰에서 채운다) */
+  /* Phase 단추의 모양: 낮 = 지구(둥근 원 + 경위선), 밤 = 인공위성(네모난 몸체 + 태양전지판) (sheet.css의 .station) */
+  --station-radius: 50%;
+  --station-globe: block;
+  --station-wings: none;
+  --station-gap: 8px;
+  /* Phase 단추에 마우스를 올렸을 때: 낮에는 하늘색(지구가 하늘에 비친 듯), 밤에는 먹 반전 */
+  --station-hover-bg: var(--desk);
+  --station-hover-fg: var(--ink);
+  --ink: oklch(0.25 0.016 255);
+  --ink-2: oklch(0.44 0.016 255); /* 보조 글자: 종이 위 대비 7:1 이상 */
+  --ink-3: oklch(0.56 0.014 255); /* 숫자 코드 · 비활성. 큰 글자와 선에만 */
+  --line: oklch(0.84 0.008 250); /* 가는 외곽선 */
+  --line-2: oklch(0.66 0.012 250); /* 줄기 · 가지 선 */
+  --select-bg: var(--ink); /* 선택 = 먹 반전 */
+  --select-fg: var(--paper);
+
+  /* 팀 = CAD 레이어 표준색 7개 (빨강, 노랑, 초록, 하늘, 파랑, 자주, 먹). 출력 도면에서 읽히도록 어둡게 맞춘다 */
+  --team-sys: var(--ink);
+  /* 색각 이상에서도 구분되도록 밝기를 벌린다: 먹 0.25 · 파랑 0.45 · 빨강 0.5 · 하늘 0.56 · 자주 0.6 · 초록 0.66 · 노랑 0.74 */
+  --team-box: oklch(0.6 0.19 332);
+  --team-eps: oklch(0.5 0.2 27);
+  --team-adcs: oklch(0.66 0.17 148);
+  --team-com: oklch(0.56 0.1 220);
+  --team-obc: oklch(0.45 0.17 262);
+  --team-pay: oklch(0.74 0.15 80);
+  --team-sys-on: var(--paper);
+  --team-box-on: var(--ink);
+  --team-eps-on: var(--paper);
+  --team-adcs-on: var(--ink);
+  --team-com-on: var(--paper);
+  --team-obc-on: var(--paper);
+  --team-pay-on: var(--ink);
+
+  --alert: oklch(0.52 0.19 27);
+
+  /* Geologica: 공학적인 골격에 둥근 글자꼴(CRSV)을 켠 가변 글꼴. 라벨 · 코드도 같은 글꼴의 보통 폭을 쓴다
+     (좁은 판은 딱딱해 보인다는 의견으로 뺐다. --font-narrow는 라벨 역할의 이름으로 남겨 둔다) */
+  --font: 'Geologica Variable', -apple-system, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-narrow: var(--font);
+  font-variation-settings: 'CRSV' 1, 'SHRP' 0;
+
+  /* 글자 크기: 1.15배 단계 */
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-md: 0.875rem;
+  --t-lg: 1rem;
+  --t-xl: 1.1875rem;
+  --t-2xl: 1.5rem;
+  --t-3xl: 1.875rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+
+/* 밤: Night를 골랐거나, Auto이고 컴퓨터가 다크 모드일 때 (theme.ts가 data-theme을 night로 적는다) */
+:root[data-theme='night'] {
+  /* 밤: 깊은 남색 하늘과 남회색 종이, 별빛 같은 밝은 선 */
+  --paper: oklch(0.215 0.022 262);
+  --paper-2: oklch(0.245 0.024 262);
+  --desk: oklch(0.145 0.035 268);
+  --ink: oklch(0.94 0.012 235);
+  --ink-2: oklch(0.77 0.018 240);
+  --ink-3: oklch(0.61 0.018 245);
+  --line: oklch(0.34 0.022 258);
+  --line-2: oklch(0.52 0.024 255);
+  /* 드문드문한 별: 같은 무늬가 반복되지 않게 크기가 다른 두 겹을 겹친다 */
+  --station-radius: 3px;
+  --station-globe: none;
+  --station-wings: block;
+  --station-hover-bg: var(--select-bg);
+  --station-hover-fg: var(--select-fg);
+  --station-gap: 22px;
+  --sky-art: radial-gradient(1px 1px at 23px 41px, oklch(0.9 0.02 240 / 0.7) 50%, transparent 51%),
+    radial-gradient(1px 1px at 137px 9px, oklch(0.9 0.02 240 / 0.5) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 211px 167px, oklch(0.95 0.03 90 / 0.6) 50%, transparent 51%),
+    radial-gradient(1px 1px at 61px 223px, oklch(0.9 0.02 240 / 0.45) 50%, transparent 51%),
+    radial-gradient(1px 1px at 311px 97px, oklch(0.9 0.02 240 / 0.55) 50%, transparent 51%);
+
+  /* 밤에는 레이어색을 화면 그대로 밝게 */
+  --team-box: oklch(0.74 0.17 332);
+  --team-eps: oklch(0.66 0.18 27);
+  --team-adcs: oklch(0.82 0.17 148);
+  --team-com: oklch(0.72 0.11 220);
+  --team-obc: oklch(0.62 0.15 262);
+  --team-pay: oklch(0.89 0.14 95);
+  /* 밤의 레이어색은 모두 밝다: 숫자는 어두운 종이색 */
+  --team-box-on: var(--paper);
+  --team-adcs-on: var(--paper);
+  --team-pay-on: var(--paper);
+
+  --alert: oklch(0.72 0.16 27);
   color-scheme: dark;
 }
 
@@ -38,42 +108,123 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  /* 화면이 통째로 바뀌는 앱이라, 브라우저가 스크롤 위치를 저절로 고치면(scroll anchoring) 전환 중에 화면이 튄다 */
+  overflow-anchor: none;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--void);
-  color: var(--fg);
-  font-family: var(--font-body);
-  font-size: 14px;
-  font-weight: 450; /* Jost는 작은 크기에서 가늘어 보여 기본 굵기를 조금 올린다 */
-  line-height: 1.5;
+  background: var(--sky-art), var(--desk);
+  background-size: 347px 263px; /* 별 무늬 한 칸 */
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--t-md);
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
 }
 
-/* 버튼은 기본으로 글꼴을 물려받지 않는다 */
-button { font: inherit; }
+h1,
+h2,
+h3,
+p,
+ol,
+ul {
+  margin: 0;
+}
 
-/* 숫자가 바뀌어도 자리 폭이 흔들리지 않게 (배율) */
-.num { font-variant-numeric: tabular-nums; }
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
 
-::selection { background: rgb(83 58 236 / 0.55); color: #ffffff; }
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
 
-.star-field {
+button {
+  cursor: pointer;
+}
+
+/* 포커스: CAD에서 선택한 객체처럼 점선 테두리 */
+:focus-visible {
+  outline: 1.5px dashed var(--ink);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 상세도 전환은 직접 그린다 (hooks/useRoute.ts 참고). 기본 교차 페이드는 끈다 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-vt='close']::view-transition-old(root) {
+  z-index: 2;
+}
+
+/* 상세도 원 테두리 (hooks/useRoute.ts의 detailRing). 전환 동안만 존재한다 */
+@property --ring-r {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 22px;
+}
+
+.vt-ring {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  z-index: 100;
+  background: var(--ink);
   pointer-events: none;
+  view-transition-name: detail-ring;
+  mask-image: radial-gradient(
+    circle at var(--ring-x) var(--ring-y),
+    transparent calc(var(--ring-r) - 1.25px),
+    #000 calc(var(--ring-r) - 0.5px),
+    #000 calc(var(--ring-r) + 0.5px),
+    transparent calc(var(--ring-r) + 1.25px)
+  );
 }
 
-/* 지구: 화면 오른쪽 아래 모서리에 고정. 콘텐츠(.page)가 그 위로 지나간다 */
-.earth {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  width: clamp(220px, 38vw, 560px);
-  height: auto;
-  aspect-ratio: 1;
-  pointer-events: none;
+/* 밤: 네모난 테두리 하나 (useRoute.ts가 위치와 크기를 움직인다) */
+.vt-ring.square {
+  inset: auto;
+  background: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  mask-image: none;
 }
-.earth-atmosphere { fill: none; stroke: #8fb4d8; stroke-opacity: 0.3; stroke-width: 0.6; }
+
+::view-transition-group(detail-ring) {
+  z-index: 3;
+  animation: none;
+}
+
+::view-transition-new(detail-ring) {
+  animation: none;
+}

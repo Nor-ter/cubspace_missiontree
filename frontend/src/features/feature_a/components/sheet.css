@@ -1,0 +1,683 @@
+/* Sheet 1: 전체 여정 도면 */
+
+.sheet {
+  position: relative;
+  min-height: calc(100vh - 52px - 32px);
+  margin: 16px;
+  padding: 20px 20px 24px;
+  border: 1px solid var(--line-2);
+  background: var(--paper);
+}
+
+/* 범례는 Pre-A 열의 아래에 놓는다. 오른쪽 아래에는 미니맵이 떠 있으므로
+   E · F 열은 미니맵 높이만큼, Pre-A 열은 범례 높이만큼 아래쪽을 비워 겹치지 않게 한다 */
+.trunk-wrap {
+  --gap: 14px;
+  --fr: calc((100% - 6 * var(--gap)) / 7);
+  --tb-h: var(--minimap-h, 0px); /* 오른쪽 아래 고정 미니맵의 높이 (Minimap.tsx가 알려 준다) */
+  --legend-h: 150px;
+  position: relative;
+}
+
+.trunk {
+  position: relative;
+  display: grid;
+  /* 열 폭은 Workshop 수와 이름 길이에 맞춘다: A · B가 가장 넓고 Pre-A · F가 가장 좁다 */
+  grid-template-columns: 0.9fr 1.05fr 1.1fr 1.05fr 1fr 1fr 0.9fr;
+  column-gap: var(--gap);
+}
+
+.trunk > :nth-child(1) {
+  padding-bottom: calc(var(--legend-h) + 24px);
+}
+
+.trunk > :nth-child(6),
+.trunk > :nth-child(7) {
+  padding-bottom: calc(var(--tb-h) + 16px);
+}
+
+.trunk-wrap > .legend {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(0.9 * var(--fr));
+}
+
+/* 줄기: 첫 Phase 원의 중심에서 오른쪽 끝까지, 끝은 화살표 (Pre-A → F 진행 방향) */
+.trunk::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  right: 0;
+  border-top: 1px solid var(--line-2);
+}
+
+.trunk::after {
+  content: '';
+  position: absolute;
+  top: 18.5px;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--line-2);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.phase-col {
+  position: relative;
+  min-width: 0;
+}
+
+/* Phase 머리: 상세도 원 + 이름. 누르면 상세도가 열린다 */
+.phase-head {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--station-gap);
+  width: 100%;
+  padding: 0 8px 0 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+/* 원 아래에서 가지로 이어지는 선 (이름이 원보다 길 때 빈틈을 메운다) */
+.phase-head::after {
+  content: '';
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  left: 22px;
+  border-left: 1px solid var(--line-2);
+}
+
+.station {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  isolation: isolate;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--station-radius);
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: background-color 150ms, color 150ms;
+}
+
+/* 단추 그림 (Drawing.tsx의 StationArt): 낮 = 지구 경위선, 밤 = 인공위성 태양전지판. 글자는 그 위 */
+.station-art {
+  position: absolute;
+  inset: -1.5px;
+  z-index: -1;
+  width: calc(100% + 3px);
+  height: calc(100% + 3px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.station-art .globe {
+  display: var(--station-globe);
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1;
+}
+
+.station-art .sat {
+  display: var(--station-wings);
+}
+
+.station-art .sat-panel {
+  fill: var(--paper-2);
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+.station-art .cells,
+.station-art .strut {
+  fill: none;
+  stroke: var(--line-2);
+  stroke-width: 1;
+}
+
+.station-art .strut {
+  stroke: var(--ink);
+  stroke-width: 1.5;
+}
+
+/* 밤: 평소에는 네모난 몸체만. 단추에 마우스를 올리면 태양전지판이 몸체 쪽에서부터 펼쳐진다 */
+.station-art .wing {
+  transform: scaleX(0);
+  transform-box: fill-box;
+  transition: transform 260ms var(--ease-out);
+}
+
+.station-art .wing.left {
+  transform-origin: right center;
+}
+
+.station-art .wing.right {
+  transform-origin: left center;
+}
+
+.phase-head:hover .station-art .wing,
+.phase-head:focus-visible .station-art .wing {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .station-art .wing {
+    transition: none;
+  }
+}
+
+.station[data-station='Pre-A'] {
+  font-size: var(--t-md);
+}
+
+.phase-head:hover .station,
+.phase-head:focus-visible .station {
+  background: var(--station-hover-bg);
+  color: var(--station-hover-fg);
+}
+
+.phase-head:hover .phase-count,
+.phase-head:focus-visible .phase-count {
+  opacity: 1;
+}
+
+.phase-head:hover .phase-title {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.phase-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding-top: 3px;
+}
+
+.phase-title {
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+
+.phase-count {
+  opacity: 0; /* 마우스를 올렸을 때만 (자리는 지켜서 글자가 움직이지 않게) */
+  transition: opacity 150ms;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+}
+
+/* 마우스가 없는 화면(터치): 올려 볼 수 없으니 늘 보인다 */
+@media (hover: none) {
+  .phase-count {
+    opacity: 1;
+  }
+}
+
+/* 가지: Phase 원 아래로 내려오는 세로선에 팀이 매달린다 */
+.branch {
+  position: relative;
+  padding: 10px 0 0 32px;
+}
+
+.branch::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 22px;
+  height: 10px;
+  border-left: 1px solid var(--line-2);
+}
+
+.team {
+  --c: var(--line-2);
+  position: relative;
+  transition: opacity 200ms;
+}
+
+.team + .team {
+  margin-top: 4px;
+}
+
+.team::before,
+.team::after,
+.leaves > li::before,
+.leaves > li::after {
+  content: '';
+  position: absolute;
+  border-color: var(--line-2);
+  border-style: solid;
+  border-width: 0;
+  transition: border-color 200ms;
+}
+
+.team::before {
+  top: 0;
+  bottom: 0;
+  left: -10px;
+  border-left-width: 1px;
+}
+
+.team + .team::before {
+  top: -4px;
+}
+
+.team:last-child::before {
+  bottom: auto;
+  height: 11px;
+}
+
+.team + .team:last-child::before {
+  height: 15px;
+}
+
+.team::after {
+  top: 11px;
+  left: -10px;
+  width: 8px;
+  border-top-width: 1px;
+}
+
+.team-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.leaves {
+  position: relative;
+  padding-left: 17px;
+}
+
+.leaves > li {
+  position: relative;
+}
+
+.leaves > li::before {
+  top: 0;
+  bottom: 0;
+  left: -8px;
+  border-left-width: 1px;
+}
+
+.leaves > li:last-child::before {
+  bottom: auto;
+  height: 10px;
+}
+
+.leaves > li::after {
+  top: 10px;
+  left: -8px;
+  width: 6px;
+  border-top-width: 1px;
+}
+
+.leaf {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  width: 100%;
+  min-height: 19px;
+  padding: 2px;
+  border: 0;
+  background: none;
+  font-family: var(--font-narrow);
+  /* Geologica는 소문자가 커서 12px로도 Barlow 13px만큼 읽힌다. 한 장에 다 들어오게 한 단계 작게 */
+  font-size: var(--t-xs);
+  letter-spacing: -0.005em;
+  text-align: left;
+}
+
+.leaf:hover {
+  background: var(--paper-2);
+}
+
+.leaf:hover .leaf-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.leaf-code {
+  flex: none;
+  min-width: 1.6em;
+  padding-top: 1px;
+  color: var(--ink-2);
+  font-size: 0.6875rem;
+  line-height: 15px;
+}
+
+.leaf-name {
+  flex: 1;
+  min-width: 0;
+  line-height: 15px;
+  hyphens: auto;
+}
+
+.leaf .slots {
+  padding-top: 4px;
+}
+
+/* 옆 패널에 열린 Workshop: 먹 반전 (상세도 목록과 같은 선택 규칙) */
+.leaf[aria-current] {
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+.leaf[aria-current] .leaf-code {
+  color: color-mix(in oklch, var(--select-fg) 78%, var(--select-bg));
+}
+
+.leaf[aria-current] .slot {
+  border-color: color-mix(in oklch, var(--select-fg) 60%, var(--select-bg));
+}
+
+.leaf[aria-current] .slot.on {
+  border-color: var(--select-fg);
+  background: var(--select-fg);
+}
+
+.leaf[aria-current]:hover .leaf-name {
+  text-decoration: none;
+}
+
+/* 전체 도면에서 Workshop을 연 동안 왼쪽에 남는 가지.
+   도면의 열과 같은 폭(--branch-w)과 같은 높이에 놓아, 가지가 옆으로만 옮겨 온 것처럼 보이게 한다 */
+.branch-pane {
+  position: sticky;
+  top: 52px;
+  height: calc(100vh - 52px);
+  overflow: auto;
+  padding: 37px 16px 24px 37px;
+  background: var(--paper);
+}
+
+.branch-pane .phase-col {
+  width: var(--branch-w, 200px);
+  background: var(--paper);
+}
+
+/* 팀 레이어를 고르면: 그 팀 가지는 레이어색, 다른 팀은 흐리게, 그 팀이 없는 Phase도 흐리게 */
+.branch-pane[data-team] .team:not([data-match]),
+.sheet[data-team] .team:not([data-match]) {
+  opacity: 0.5;
+}
+
+.team[data-match]::before,
+.team[data-match]::after,
+.team[data-match] .leaves > li::before,
+.team[data-match] .leaves > li::after {
+  border-color: var(--c);
+}
+
+.team[data-match] .balloon {
+  background: var(--c);
+  color: var(--on);
+}
+
+.team[data-match] .team-head {
+  color: var(--ink);
+}
+
+.phase-col[data-dim] .station,
+.phase-col[data-dim] .phase-text {
+  opacity: 0.5;
+}
+
+/* 세로 방향: 줄기가 위에서 아래로 흐르고, Phase마다 한 줄. 그 줄에서 팀 가지가 옆으로 뻗는다 */
+.sheet[data-orient='down'] .trunk {
+  grid-template-columns: minmax(0, 1fr);
+  row-gap: 22px;
+}
+
+.sheet[data-orient='down'] .trunk::before {
+  top: 22px;
+  bottom: 0;
+  left: 22px;
+  right: auto;
+  border-top: 0;
+  border-left: 1px solid var(--line-2);
+}
+
+.sheet[data-orient='down'] .trunk::after {
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 18px;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.sheet[data-orient='down'] .phase-col {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  align-items: start;
+  padding-bottom: 0;
+}
+
+/* Phase 원에서 오른쪽으로 가로 가지: 팀 풍선이 이 선 위에 놓인다 */
+.sheet[data-orient='down'] .phase-col::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: 0;
+  left: 44px;
+  border-top: 1px solid var(--line-2);
+}
+
+.sheet[data-orient='down'] .phase-head {
+  position: relative;
+  z-index: 1;
+  background: var(--paper);
+}
+
+.sheet[data-orient='down'] .phase-head::after,
+.sheet[data-orient='down'] .branch::before,
+.sheet[data-orient='down'] .team::before,
+.sheet[data-orient='down'] .team::after {
+  display: none;
+}
+
+/* 팀은 번호대로 같은 열에 선다: 어느 Phase든 SYS는 1열, PAY는 7열 */
+.sheet[data-orient='down'] .branch {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  column-gap: 14px;
+  padding: 11px 0 0;
+}
+
+.sheet[data-orient='down'] .team {
+  grid-column: var(--n);
+  margin: 0;
+}
+
+.sheet[data-orient='down'] .team-head {
+  position: relative;
+  width: fit-content;
+  padding-right: 6px;
+  background: var(--paper);
+}
+
+.sheet[data-orient='down'] .trunk-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.sheet[data-orient='down'] .trunk {
+  width: 100%;
+}
+
+.sheet[data-orient='down'] .trunk > :nth-child(n) {
+  padding-bottom: 0;
+}
+
+.sheet[data-orient='down'] .trunk-wrap > .legend {
+  position: static;
+}
+
+.sheet[data-orient='down'] .trunk-wrap > .legend {
+  width: auto;
+}
+
+/* 13인치 노트북(1280×800): 한 장이 화면에 들어오도록 글자와 간격을 한 단계 줄인다 */
+@media (max-width: 1360px) and (min-width: 1001px) {
+  .trunk-wrap {
+    --gap: 8px;
+  }
+
+  .sheet {
+    padding: 14px 10px 14px;
+  }
+
+  .branch {
+    padding-left: 27px;
+  }
+
+  .team::before,
+  .team::after {
+    left: -5px;
+  }
+
+  .team::after {
+    width: 4px;
+  }
+
+  .team + .team {
+    margin-top: 2px;
+  }
+
+  .team + .team::before {
+    top: -2px;
+  }
+
+  .team + .team:last-child::before {
+    height: 13px;
+  }
+
+  .team-head {
+    height: 20px;
+  }
+
+  .team::after {
+    top: 10px;
+  }
+
+  .team:last-child::before {
+    height: 10px;
+  }
+
+  .leaves {
+    padding-left: 15px;
+  }
+
+  .leaves > li::before,
+  .leaves > li::after {
+    left: -6px;
+  }
+
+  .leaves > li::after {
+    width: 4px;
+  }
+
+  .leaf {
+    gap: 4px;
+  }
+
+  .slot {
+    width: 7px;
+    height: 7px;
+  }
+
+  .leaf {
+    min-height: 17px;
+    padding: 1px 2px;
+  }
+
+  .leaf-name,
+  .leaf-code {
+    line-height: 14px;
+  }
+
+  .leaf .slots {
+    padding-top: 3px;
+  }
+
+  .leaves > li::after {
+    top: 9px;
+  }
+
+  .leaves > li:last-child::before {
+    height: 9px;
+  }
+
+  .phase-title {
+    font-size: var(--t-xs);
+  }
+
+  .sheet[data-orient='down'] .phase-col {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .branch-pane {
+    padding: 31px 12px 20px 27px;
+  }
+
+
+  .sheet[data-orient='down'] .branch {
+    column-gap: 10px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .branch-pane {
+    display: none;
+  }
+
+  .sheet {
+    min-height: 0;
+    margin: 12px;
+    padding: 16px;
+  }
+
+  .trunk {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+
+  .trunk::before,
+  .trunk::after {
+    display: none;
+  }
+
+  .trunk > :nth-child(n) {
+    padding-bottom: 0;
+  }
+
+  .trunk-wrap > .legend {
+    position: static;
+    width: auto;
+    margin-top: 24px;
+  }
+}

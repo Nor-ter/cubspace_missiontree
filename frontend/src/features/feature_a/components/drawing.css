@@ -1,0 +1,99 @@
+/* 도면 기호: 팀 풍선, 자료 칸, 아이콘 */
+
+.balloon {
+  --c: var(--ink);
+  --on: var(--paper);
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid var(--c);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.balloon.md {
+  width: 24px;
+  height: 24px;
+  font-size: var(--t-sm);
+}
+
+/* 고른 팀: 풍선을 레이어색으로 채운다. 숫자색은 채운 색의 밝기에 맞춘다 (--on) */
+[data-picked] .balloon,
+.balloon[data-picked] {
+  background: var(--c);
+  color: var(--on);
+}
+
+.slots {
+  display: inline-flex;
+  gap: 3px;
+  flex: none;
+}
+
+.slot {
+  width: 8px;
+  height: 8px;
+  border: 1px dashed var(--line-2);
+}
+
+.slot.on {
+  border: 1px solid var(--ink);
+  background: var(--ink);
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+}
+
+/* 도면의 기본 버튼: 가는 테두리, 각진 모서리 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: var(--t-sm);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+.btn:hover {
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+
+.btn:active {
+  background: var(--line);
+}
+
+.btn:disabled {
+  border-color: var(--line);
+  color: var(--ink-3);
+  cursor: default;
+  background: var(--paper);
+}
+
+.btn.icon-only {
+  justify-content: center;
+  width: 32px;
+  padding: 0;
+}
