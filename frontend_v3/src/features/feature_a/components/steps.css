@@ -1,0 +1,544 @@
+/* 펼쳐 보기: 전체 도면과 같은 종이 · 선 · 기호로, 한 단계씩 연다 (StepView.tsx) */
+
+.steps {
+  --k: 18px; /* 한 단계 들여쓰기 (연결선이 그 가운데로 지난다) */
+  --row: 22px; /* 한 줄 높이: 연결선이 줄의 가운데(11px)에 닿는다 */
+  --w-phase: 250px; /* Down: 열 폭 */
+  --w-team: 168px;
+  --w-card: 300px;
+  position: relative;
+  min-height: calc(100vh - 52px - 32px);
+  margin: 16px;
+  padding: 16px 20px 28px;
+  border: 1px solid var(--line-2);
+  background: var(--paper);
+  overflow-x: clip; /* Down에서 가운데로 옮긴 줄기가 종이 밖으로 넘치지 않게 */
+}
+
+/* 맨 위: 모두 펼치기 · 접기와 자료 칸 범례 */
+.steps-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+
+.steps-tools .legend {
+  margin-left: auto;
+}
+
+.steps-scroll {
+  overflow-x: auto;
+  padding-bottom: 8px;
+  /* 모두 접혔을 때 가운데 ↔ 펼쳤을 때 위 · 왼쪽 (StepView.tsx useCenter) */
+  transition: translate 450ms var(--ease-out);
+}
+
+.steps-trunk {
+  position: relative;
+}
+
+/* 줄기 끝의 화살표 (Pre-A → F 진행 방향) */
+.steps-trunk::before,
+.steps-trunk::after {
+  content: '';
+  position: absolute;
+}
+
+/* ── Phase ── */
+
+.phase-cell {
+  position: relative;
+}
+
+.steps .phase-head {
+  width: auto;
+  max-width: 100%;
+  background: var(--paper);
+}
+
+/* 전체 도면의 "원 아래 세로선"은 여기서는 펼쳤을 때만 따로 그린다 */
+.steps .phase-head::after {
+  display: none;
+}
+
+.steps .phase-text {
+  padding-right: 6px;
+  background: var(--paper);
+}
+
+/* Phase 이름 아래: 펼침 단추 + 무엇이 펼쳐지는지 */
+.phase-sub {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  margin: 2px 0 0 calc(44px + var(--station-gap));
+  padding-right: 6px;
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+}
+
+.step-phase[data-dim] .station,
+.step-phase[data-dim] .phase-text,
+.step-phase[data-dim] .phase-sub {
+  opacity: 0.5;
+}
+
+/* ── 펼침 단추 ── */
+
+.step-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 26px;
+  height: 18px;
+  padding: 0 4px;
+  border: 1px solid var(--line-2);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-narrow);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  transition: background-color 150ms, border-color 150ms;
+}
+
+button.step-toggle:hover,
+.team-row:hover .step-toggle {
+  border-color: var(--ink);
+  background: var(--paper-2);
+}
+
+/* ── 한 줄 (팀 · Task Card · Task) ── */
+
+.step-cell {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  min-height: var(--row);
+}
+
+.step-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  min-height: var(--row);
+  padding: 3px 4px;
+  border: 0;
+  background: var(--paper);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+  line-height: 16px;
+  text-align: left;
+}
+
+button.step-row:hover {
+  background: var(--paper-2);
+}
+
+/* Task 줄은 패널로 가는 길(밑줄), 팀 · Task Card 줄은 펼침 */
+.task-row:hover .step-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.team-row {
+  align-items: center;
+  padding-left: 0;
+  color: var(--ink-2);
+}
+
+.team-row .team-code {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.team-row .team-name {
+  min-width: 0;
+}
+
+.step-code {
+  flex: none;
+  min-width: 1.7em;
+  color: var(--ink-2);
+  font-size: 0.6875rem;
+}
+
+.step-name {
+  min-width: 0;
+  hyphens: auto;
+}
+
+.card-row .step-name {
+  font-size: var(--t-sm);
+  line-height: 16px;
+}
+
+.step-cell > .slots {
+  padding-top: 7px;
+}
+
+.step-cell > .step-toggle {
+  margin-top: 2px;
+}
+
+.task-row {
+  color: var(--ink-2);
+}
+
+.task-row .step-name {
+  color: var(--ink);
+}
+
+/* ── 연결선: 펼친 단계는 부모에서 내려오는(또는 뻗는) 선에 매달린다 ── */
+
+.kids {
+  position: relative;
+  padding-left: var(--k);
+}
+
+.kids > li {
+  position: relative;
+}
+
+.kids > li::before,
+.kids > li::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--k) / -2);
+  border: 0 solid var(--branch);
+  transition: border-color 200ms;
+}
+
+/* 세로선 */
+.kids > li::before {
+  top: 0;
+  bottom: 0;
+  border-left-width: 1px;
+}
+
+.kids > li:last-child::before {
+  bottom: auto;
+  height: calc(var(--row) / 2);
+}
+
+/* 가로 눈금 */
+.kids > li::after {
+  top: calc(var(--row) / 2);
+  width: calc(var(--k) / 2 - 2px);
+  border-top-width: 1px;
+}
+
+/* ── 팀 레이어: 고른 팀은 레이어색, 나머지는 흐리게 ── */
+
+.steps[data-team] .team-node:not([data-match]) {
+  opacity: 0.5;
+}
+
+.team-node[data-match] .kids > li::before,
+.team-node[data-match] .kids > li::after {
+  border-color: var(--c);
+}
+
+.team-node[data-match] > .step-cell .balloon {
+  background: var(--c);
+  color: var(--on);
+}
+
+.team-node[data-match] > .step-cell .team-row {
+  color: var(--ink);
+}
+
+/* ═══ Across: 줄기가 왼쪽 → 오른쪽, 펼친 단계는 Phase 아래로 ═══ */
+
+.steps[data-orient='across'] .steps-trunk {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  /* 화면 폭에 맞춰 일곱 Phase가 나눠 갖는다. 펼친 Phase들의 최소 폭이 화면보다 넓어질 때만 옆으로 넘긴다 */
+  width: fit-content;
+  min-width: 100%;
+}
+
+.steps[data-orient='across'] .steps-trunk::before {
+  top: 22px;
+  left: 22px;
+  right: 0;
+  border-top: 1px solid var(--branch);
+}
+
+.steps[data-orient='across'] .steps-trunk::after {
+  top: 18.5px;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--branch);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+/* 접힌 Phase는 한 줄에 일곱이 고르게, 펼친 Phase는 Task 이름이 읽히게 넓어진다 */
+.steps[data-orient='across'] .step-phase {
+  flex: 1 1 0;
+  min-width: 132px;
+  max-width: 220px;
+  padding-right: 12px;
+  /* 펼치고 접을 때 가지(StepView.tsx Kids)와 같이 넓어지고 좁아진다 */
+  transition:
+    flex-grow 320ms var(--ease-out),
+    min-width 320ms var(--ease-out),
+    max-width 320ms var(--ease-out);
+}
+
+.steps[data-orient='across'] .step-phase[data-open] {
+  flex: 2.2 1 0;
+  max-width: 400px;
+  min-width: 280px;
+}
+
+.steps[data-orient='across'] .step-phase:last-child {
+  padding-right: 20px;
+}
+
+/* 펼친 Phase: 원 아래에서 가지로 내려가는 선 */
+.steps[data-orient='across'] .step-phase[data-open] > .phase-cell::after {
+  content: '';
+  position: absolute;
+  top: 44px;
+  bottom: 0;
+  left: 22px;
+  border-left: 1px solid var(--branch);
+}
+
+.steps[data-orient='across'] .step-phase > .kids {
+  margin-left: calc(22px - var(--k) / 2);
+  padding-top: 10px;
+}
+
+/* 원 아래 선과 첫 팀 사이의 빈틈 */
+.steps[data-orient='across'] .step-phase > .kids::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: calc(var(--k) / 2);
+  height: 10px;
+  border-left: 1px solid var(--branch);
+}
+
+/* 가로에서는 팀 이름까지 쓰면 열이 넘친다: 코드와 번호만 (전체 도면과 같게) */
+.steps[data-orient='across'] .team-name {
+  display: none;
+}
+
+.steps[data-orient='across'] .team-node + .team-node {
+  margin-top: 2px;
+}
+
+.steps[data-orient='across'] .team-node > .kids {
+  /* 풍선 가운데(9px)에서 내려온다 */
+  margin-left: calc(9px - var(--k) / 2);
+}
+
+.steps[data-orient='across'] .card-node > .kids {
+  margin-left: calc(14px - var(--k) / 2);
+}
+
+/* ═══ Down: 줄기가 위 → 아래, 펼친 단계는 오른쪽 열로 ═══ */
+
+.steps[data-orient='down'] .steps-trunk {
+  display: grid;
+  row-gap: 18px;
+}
+
+.steps[data-orient='down'] .steps-trunk::before {
+  top: 22px;
+  bottom: 0;
+  left: 22px;
+  border-left: 1px solid var(--branch);
+}
+
+.steps[data-orient='down'] .steps-trunk::after {
+  bottom: 0;
+  left: 18px;
+  width: 8px;
+  height: 8px;
+  background: var(--branch);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.steps[data-orient='down'] .steps-trunk > li:last-child {
+  padding-bottom: 22px;
+}
+
+.steps[data-orient='down'] .step-node,
+.steps[data-orient='down'] .step-phase {
+  display: flex;
+  align-items: flex-start;
+}
+
+.steps[data-orient='down'] .phase-cell {
+  flex: none;
+  width: var(--w-phase);
+}
+
+.steps[data-orient='down'] .team-node > .step-cell {
+  flex: none;
+  width: var(--w-team);
+}
+
+.steps[data-orient='down'] .card-node > .step-cell {
+  flex: none;
+  width: var(--w-card);
+}
+
+.steps[data-orient='down'] .task-node > .step-cell {
+  max-width: 380px;
+}
+
+/* 펼친 칸: 칸의 남은 폭을 가로선(지시선)이 지나 오른쪽 열로 이어진다. 글자는 종이색 바탕이라 선을 가린다 */
+.steps[data-orient='down'] [data-open] > .step-cell {
+  background: linear-gradient(var(--branch), var(--branch)) 0 calc(var(--row) / 2) / 100% 1px no-repeat;
+}
+
+.steps[data-orient='down'] .step-phase[data-open] > .phase-cell {
+  background: linear-gradient(var(--branch), var(--branch)) 44px 22px / 100% 1px no-repeat;
+}
+
+.steps[data-orient='down'] .team-node[data-match][data-open] > .step-cell {
+  background-image: linear-gradient(var(--c), var(--c));
+}
+
+.steps[data-orient='down'] [data-open] > .step-cell > .slots {
+  background: var(--paper);
+}
+
+/* 열 사이: 부모의 가운데 높이에서 첫 자식으로 */
+.steps[data-orient='down'] .kids {
+  flex: 1;
+  min-width: 0;
+}
+
+.steps[data-orient='down'] .kids::before {
+  content: '';
+  position: absolute;
+  top: calc(var(--row) / 2);
+  left: 0;
+  width: calc(var(--k) / 2);
+  border-top: 1px solid var(--branch);
+}
+
+.steps[data-orient='down'] .team-node[data-match] .kids::before {
+  border-color: var(--c);
+}
+
+.steps[data-orient='down'] .kids > li:first-child::before {
+  top: calc(var(--row) / 2);
+}
+
+.steps[data-orient='down'] .kids > li:only-child::before {
+  display: none;
+}
+
+.steps[data-orient='down'] .kids > li + li {
+  margin-top: 2px;
+}
+
+/* Phase의 가지는 원의 가운데(22px) 높이에서 시작한다 */
+.steps[data-orient='down'] .step-phase > .kids {
+  padding-top: 11px;
+}
+
+.steps[data-orient='down'] .step-phase > .kids::before {
+  top: 22px;
+}
+
+.steps[data-orient='down'] .step-phase > .kids > li:first-child::before {
+  top: 11px;
+}
+
+/* 열 이름: 펼친 단계가 어느 열인지 (위 막대 아래에 붙어 따라온다) */
+.steps-cols {
+  position: sticky;
+  top: 52px;
+  z-index: 2;
+  display: grid;
+  grid-template-columns:
+    calc(var(--w-phase) + var(--k)) calc(var(--w-team) + var(--k)) calc(var(--w-card) + var(--k))
+    1fr;
+  margin: -6px 0 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink-2);
+  font-family: var(--font-narrow);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+/* 방향 · 보기를 바꾸며 Phase 원이 이전 자리에서 날아오는 동안: 스크롤 상자와 종이가 자르지 않는다 (useOrientMotion) */
+.steps[data-moving],
+.steps[data-moving] .steps-scroll {
+  overflow: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps-scroll,
+  .steps[data-orient='across'] .step-phase {
+    transition: none;
+  }
+}
+
+/* 13인치 노트북(1280×800): 열을 조금씩 좁힌다 */
+@media (max-width: 1360px) and (min-width: 1001px) {
+  .steps {
+    --w-phase: 214px;
+    --w-team: 150px;
+    --w-card: 270px;
+    padding: 14px 14px 24px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .steps {
+    min-height: 0;
+    margin: 12px;
+    padding: 14px;
+  }
+
+  .steps[data-orient] .steps-trunk {
+    display: grid;
+    width: auto;
+    row-gap: 18px;
+  }
+
+  .steps[data-orient] .steps-trunk::before,
+  .steps[data-orient] .steps-trunk::after,
+  .steps-cols {
+    display: none;
+  }
+
+  .steps[data-orient] .step-phase,
+  .steps[data-orient] .step-node {
+    display: block;
+    max-width: none;
+  }
+
+  .steps[data-orient] .phase-cell,
+  .steps[data-orient] .step-cell {
+    width: auto;
+    background: none;
+  }
+
+  .steps[data-orient] .kids::before {
+    display: none;
+  }
+}

@@ -1,0 +1,250 @@
+/* 색과 글꼴 토큰: CAD 소프트웨어의 모델 공간. 미션 트리는 CAD로 그린 설계 도면이고, 팀은 도면의 레이어다.
+   (레퍼런스: AutoCAD 어두운 작업 화면 — 청회색 모델 공간, 모눈, 1px 선, 레이어 색, 선택 시 파란 점선과 잡기 점)
+   바탕 · 글자 색은 airborne.studio의 두 색: 따뜻한 검정 #191919 · 크림 #FBF4E6.
+   밤(어두운 테마) = 따뜻한 검정 모델 공간에 크림 글자. 이 제품의 기본 얼굴이다.
+   낮(밝은 테마) = 크림 모델 공간에 따뜻한 검정 글자.
+   모양은 cad.css. 위 막대의 Day / Night / Auto로 고르고, Auto면 컴퓨터 설정을 따른다.
+   화면에 적용되는 값은 늘 data-theme="day" | "night" 하나다 (features/feature_a/theme.ts) */
+:root {
+  /* 선택(펼친 Phase · 고른 것 · 포커스) = CAD의 선택 파랑: 파란 점선 + 파란 잡기 점 */
+  --grip: #1f6fd1;
+  --mainline: var(--grip);
+  --trace: #8c867a; /* 레이어가 없는 선(줄기 · Phase에서 팀으로 내려가는 선) */
+  --silk: var(--ink-2);
+
+  /* 모델 공간과 글자: airborne.studio의 두 색 (크림 #FBF4E6 · 따뜻한 검정 #191919). 낮은 크림 바탕 */
+  --paper: #fbf4e6;
+  --paper-2: #fffaf0; /* 카드 · 패널 */
+  --desk: var(--paper);
+  /* 모눈: 16px 작은 칸 + 80px 큰 칸 (따뜻한 검정을 옅게) */
+  --sky-art: linear-gradient(rgb(25 25 25 / 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(25 25 25 / 0.07) 1px, transparent 1px),
+    linear-gradient(rgb(25 25 25 / 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(25 25 25 / 0.035) 1px, transparent 1px);
+  --sky-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
+  --float: rgb(255 250 240 / 0.94); /* 모델 공간 위에 뜬 도구 막대 */
+  --float-line: rgb(25 25 25 / 0.14);
+  /* Phase = CAD 원(circle) 객체: 속이 빈 원 (cad.css) */
+  --station-radius: 50%;
+  --station-globe: none;
+  --station-wings: none;
+  --station-gap: 12px;
+  --station-hover-bg: var(--paper);
+  --station-hover-fg: var(--grip);
+  --ink: #191919;
+  --ink-2: #57534b; /* 보조 글자: 바탕 위 대비 7:1 */
+  --ink-3: #8c867a; /* 숫자 코드 · 비활성. 큰 글자와 선에만 */
+  --line: #e6dccb; /* 가는 외곽선 */
+  --line-2: #bdb3a2; /* 단추 테두리 · 빈 칸 */
+  --branch: var(--trace);
+  --accent: var(--grip);
+  --select-bg: var(--grip);
+  --select-fg: #ffffff;
+
+  /* 팀 = CAD 레이어 색 계열을 파스텔로 누그러뜨린 색 (형광은 눈이 피로하다는 의견). 초록은 쓰지 않는다.
+     낮(크림 바탕)은 글자로도 읽히도록 채도를 낮춘 중간 밝기, 밤은 밝은 파스텔 */
+  --team-sys: #3b3833; /* 7 흰/검정: 배경의 반대색 */
+  --team-box: #a3609f; /* 6 자홍 */
+  --team-eps: #bf625c; /* 1 빨강 */
+  --team-adcs: #bb7a3f; /* 30 주황 */
+  --team-com: #4a92a3; /* 4 하늘 */
+  --team-obc: #5f70b3; /* 5 파랑 */
+  --team-pay: #9c8530; /* 2 노랑 */
+  /* 레이어 번호(원) 안의 숫자색 */
+  --team-sys-on: #ffffff;
+  --team-box-on: #ffffff;
+  --team-eps-on: #ffffff;
+  --team-adcs-on: #ffffff;
+  --team-com-on: #ffffff;
+  --team-obc-on: #ffffff;
+  --team-pay-on: #ffffff;
+
+  --alert: #d7261e;
+
+  /* 글꼴 (레퍼런스: airborne.studio). 저쪽 글꼴은 유료 · 전용이라 가장 가까운 무료 글꼴로:
+     본문 · 라벨 = Inter Tight (Neue Haas Grotesk Display 대신: 자간이 좁은 그로테스크)
+     제목      = Archivo를 가장 넓고 가장 두껍게 (gravity 대신: 넓고 무거운 표제 글자) */
+  --font: 'Inter Tight Variable', -apple-system, 'Apple SD Gothic Neo', 'Segoe UI', sans-serif;
+  --font-narrow: var(--font);
+  --font-display: 'Archivo Variable', var(--font);
+  /* CAD 도면 글자: 코드 · 개수 · 좌표처럼 자리를 맞춰 읽는 글자는 고정폭 */
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* 글자 크기: 1.15배 단계 */
+  --t-xs: 0.75rem;
+  --t-sm: 0.8125rem;
+  --t-md: 0.875rem;
+  --t-lg: 1rem;
+  --t-xl: 1.1875rem;
+  --t-2xl: 1.5rem;
+  --t-3xl: 1.875rem;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+
+/* 밤: Night를 골랐거나, Auto이고 컴퓨터가 다크 모드일 때 (theme.ts가 data-theme을 night로 적는다) */
+:root[data-theme='night'] {
+  /* 밤: airborne.studio의 따뜻한 검정 바탕(#191919) 위 크림 글자(#FBF4E6). 모눈도 크림을 옅게 */
+  --grip: #4d9bff;
+  --trace: #8a857b;
+  --paper: #191919;
+  --paper-2: #232220;
+  --desk: #191919;
+  --sky-art: linear-gradient(rgb(251 244 230 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(251 244 230 / 0.06) 1px, transparent 1px),
+    linear-gradient(rgb(251 244 230 / 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(251 244 230 / 0.025) 1px, transparent 1px);
+  --float: rgb(35 34 32 / 0.96);
+  --float-line: rgb(251 244 230 / 0.14);
+  --ink: #fbf4e6;
+  --ink-2: #b0aa9e; /* 바탕 위 대비 7:1 */
+  --ink-3: #7d7870;
+  --line: #2c2a27;
+  --line-2: #4d4a44;
+  --select-fg: #0d1117;
+
+  /* 어두운 배경: 밝은 파스텔 */
+  --team-sys: #e8e1d3;
+  --team-box: #dba8d8;
+  --team-eps: #eba7a2;
+  --team-adcs: #efbe91;
+  --team-com: #9fd0dc;
+  --team-obc: #aab6e8;
+  --team-pay: #e6d595;
+  --team-sys-on: #191919;
+  --team-box-on: #191919;
+  --team-eps-on: #191919;
+  --team-adcs-on: #191919;
+  --team-com-on: #191919;
+  --team-obc-on: #ffffff;
+  --team-pay-on: #191919;
+
+  --alert: #ff6b5e;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* 화면이 통째로 바뀌는 앱이라, 브라우저가 스크롤 위치를 저절로 고치면(scroll anchoring) 전환 중에 화면이 튄다 */
+  overflow-anchor: none;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--sky-art), var(--desk);
+  background-size: var(--sky-size, auto); /* 모눈 */
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: var(--t-md);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  font-variant-numeric: tabular-nums;
+}
+
+h1,
+h2,
+h3,
+p,
+ol,
+ul {
+  margin: 0;
+}
+
+ol,
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* 포커스: CAD에서 선택한 객체처럼 점선 테두리 */
+:focus-visible {
+  outline: 1.5px dashed var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-2) transparent;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* 상세도 전환은 직접 그린다 (hooks/useRoute.ts 참고). 기본 교차 페이드는 끈다 */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+:root[data-vt='close']::view-transition-old(root) {
+  z-index: 2;
+}
+
+/* 상세도 원 테두리 (hooks/useRoute.ts의 detailRing). 전환 동안만 존재한다 */
+@property --ring-r {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 22px;
+}
+
+.vt-ring {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--ink);
+  pointer-events: none;
+  view-transition-name: detail-ring;
+  mask-image: radial-gradient(
+    circle at var(--ring-x) var(--ring-y),
+    transparent calc(var(--ring-r) - 1.25px),
+    #000 calc(var(--ring-r) - 0.5px),
+    #000 calc(var(--ring-r) + 0.5px),
+    transparent calc(var(--ring-r) + 1.25px)
+  );
+}
+
+/* 밤: 네모난 테두리 하나 (useRoute.ts가 위치와 크기를 움직인다) */
+.vt-ring.square {
+  inset: auto;
+  background: none;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  mask-image: none;
+}
+
+::view-transition-group(detail-ring) {
+  z-index: 3;
+  animation: none;
+}
+
+::view-transition-new(detail-ring) {
+  animation: none;
+}

@@ -1,0 +1,51 @@
+/* 화면 배치: 도면 한 장, 또는 상세도 + 옆 패널 */
+
+.workspace.with-panel {
+  display: grid;
+  align-items: start;
+}
+
+/* Workshop을 연 동안: 왼쪽은 그 Phase의 가지(폭은 도면의 열과 같게), 오른쪽은 패널 */
+.workspace.with-branch {
+  grid-template-columns: max-content minmax(0, 1fr);
+}
+
+/* 가지가 옮겨 가는 동안: 도면 사본이 뒤에 깔리고, 왼쪽 가지의 바탕은 비워 사본이 보이게 한다 */
+.ghost-sheet {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.workspace.moving {
+  position: relative;
+  z-index: 1;
+}
+
+/* 움직이는 가지가 왼쪽 칸에 잘리지 않고 패널 위로 지나가게 한다 */
+.workspace.moving .branch-pane {
+  z-index: 2;
+  overflow: visible;
+  background: transparent;
+}
+
+.workspace.moving .panel {
+  z-index: 1;
+}
+
+/* 패널을 넓히면 가지는 잠시 접는다 */
+.workspace.full {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.workspace.full > .branch-pane {
+  display: none;
+}
+
+@media (max-width: 1000px) {
+  .workspace.with-panel {
+    display: block;
+  }
+}

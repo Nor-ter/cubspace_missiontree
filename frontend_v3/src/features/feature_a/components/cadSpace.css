@@ -1,0 +1,131 @@
+/* 배경의 우주 (CadSpace.tsx): 모눈 위, 내용 뒤. 선은 글자색(--ink)을 아주 옅게 써서 낮 · 밤 모두 따라간다.
+   한 장으로 늘리지 않고 묶음마다 화면 모서리에 붙인다: 화면 비율이 달라도 지구가 커지거나 잘리지 않는다 */
+
+.cad-space {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  color: var(--ink);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  pointer-events: none;
+}
+
+.cad-space svg {
+  overflow: visible;
+}
+
+/* 하늘(별 · 전이 궤도): 화면 전체 */
+.cad-space .cs-sky {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cad-space .cs-star {
+  opacity: 0.45;
+}
+
+/* 지구 묶음: 오른쪽 아래 모서리. 화면 폭의 32% · 높이의 62% 중 작은 쪽, 300 ~ 560px */
+.cad-space .cs-earth {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(300px, min(32vw, 62vh), 560px);
+  aspect-ratio: 560 / 520;
+}
+
+/* 달: 왼쪽 아래, 미니맵 위 (위쪽은 펼친 Phase 이름과 겹친다) */
+.cad-space .cs-moon {
+  position: absolute;
+  bottom: 190px;
+  left: 24px;
+  width: 260px;
+  aspect-ratio: 300 / 140;
+}
+
+/* 호주 이름: 옅은 도면 글자 */
+.cad-space .cs-label {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0.32;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.cad-space .cs-line {
+  opacity: 0.16;
+}
+
+.cad-space .cs-faint {
+  opacity: 0.1;
+}
+
+/* 숨은선(점선) · 중심선(일점쇄선): CAD 선 종류 */
+.cad-space .cs-dash {
+  stroke-dasharray: 6 5;
+}
+
+.cad-space .cs-center {
+  stroke-dasharray: 22 5 3 5;
+}
+
+/* 치수 · 주석: 선은 가늘게, 글자는 도면 글자(고정폭) */
+.cad-space .cs-dim {
+  opacity: 0.32;
+  stroke-width: 0.75;
+}
+
+.cad-space .cs-dim .cs-ext {
+  opacity: 0.6;
+}
+
+.cad-space .cs-dim text {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.cad-space .cs-node {
+  fill: var(--paper);
+  stroke-width: 1.25;
+}
+
+.cad-space marker path {
+  fill: currentColor;
+  stroke: none;
+}
+
+/* 지구 원: 속을 채우지 않는다 (뒤의 모눈이 지구 안에서도 보이게). 별은 처음부터 지구 밖에만 찍는다 */
+.cad-space .cs-globe {
+  opacity: 0.22;
+}
+
+/* 호주 해안선: 지구에서 가장 진한 선 */
+.cad-space .cs-land {
+  fill: color-mix(in srgb, var(--ink) 4%, transparent);
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+  opacity: 0.38;
+}
+
+/* MSP 표시: 배경에서 가장 진한 표시 (목표 원 + 십자선 + 지시선 주석) */
+.cad-space .cs-msp {
+  opacity: 0.7;
+  stroke-width: 1;
+}
+
+.cad-space .cs-msp text {
+  fill: currentColor;
+  stroke: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}

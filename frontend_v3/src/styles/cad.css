@@ -1,0 +1,975 @@
+/* CAD 소프트웨어의 모델 공간 (레퍼런스: AutoCAD 어두운 작업 화면).
+   다른 스타일시트 뒤에 와서 덮어쓴다. 구조(StepView · Sheet)는 그대로.
+     바탕     = 모눈이 깔린 모델 공간, 마우스는 십자선
+     줄기     = Pre-A → F 한 줄 (F 정거장에서 끝난다)
+     Phase    = CAD 원(circle) 객체: 속이 빈 원. 펼치면 CAD 선택 표시(파란 점선 + 파란 잡기 점)
+     팀       = 레이어: 팀 가지 · Task Card · Task는 늘 그 팀의 레이어 색. 팀을 고르면 나머지 레이어가 흐려진다
+     Task Card = 노드 표시(속이 빈 네모), Task = 작은 원
+     글자     = 코드 · 개수는 고정폭(도면 글자), 이름은 본문 글꼴
+     도구 막대 = 작업 영역 안의 단추(Expand all …)는 모서리가 거의 각진 CAD 단추
+     위 막대   = CAD가 아니다: airborne.studio처럼 따뜻한 검정 띠 위의 둥근 알약 (아래 ── 위 막대 ── 절)
+   :root를 앞에 붙여 원래 규칙보다 한 단계 강하게 건다. */
+
+:root {
+  --lw: 2.25px; /* 가지 굵기 (1.5 → 2.25: 노드 잇는 선을 1.5배로) */
+  --lw-task: var(--lw); /* Task 선: 가지와 같은 굵기 */
+  --lw-main: var(--lw); /* 줄기: 가지와 같은 굵기 */
+  --r: 2px; /* 도구 막대 단추 모서리 */
+}
+
+/* ── 위 막대: CAD가 아니라 airborne.studio의 띠 (따뜻한 검정 #191919 · 크림 #FBF4E6, 둥근 알약).
+   낮 · 밤과 상관없이 같은 띠다. 색 토큰을 이 안에서만 바꿔 쓴다 ── */
+
+:root .topbar {
+  --paper: #191919;
+  --paper-2: #232220;
+  --ink: #fbf4e6;
+  --ink-2: #b0aa9e;
+  --ink-3: #7d7870;
+  --line: #2c2a27;
+  --line-2: #4d4a44;
+  --float: #232220;
+  --float-line: rgb(251 244 230 / 0.16);
+  --select-bg: #fbf4e6;
+  --select-fg: #191919;
+  /* 띠는 늘 어둡다: 팀 색도 밤의 밝은 파스텔로 (낮의 SYS 진회색은 띠에 묻힌다) */
+  --team-sys: #e8e1d3;
+  --team-box: #dba8d8;
+  --team-eps: #eba7a2;
+  --team-adcs: #efbe91;
+  --team-com: #9fd0dc;
+  --team-obc: #aab6e8;
+  --team-pay: #e6d595;
+  gap: 10px;
+  min-height: 60px;
+  padding: 0 16px;
+  border-bottom: 0;
+  background: var(--paper);
+  color: var(--ink);
+  color-scheme: dark;
+}
+
+:root .topbar :is(.mission-id, .orient, .theme-switch, .layers, .cohort select, .orient button, .theme-switch button, .layer) {
+  border-radius: 999px;
+}
+
+/* 13~14인치: 팀 코드를 남기는 대신 "Mission:" 라벨을 빼고 로고 · 간격을 줄인다 */
+@media (max-width: 1360px) {
+  :root .topbar {
+    gap: 8px;
+    padding: 0 12px;
+  }
+
+  :root .wordmark {
+    font-size: var(--t-lg);
+  }
+
+  :root .topbar .mission-label {
+    display: none;
+  }
+}
+
+/* 팀 = 동그란 색 점 (번호 없이) */
+:root .topbar .balloon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ── 작업 영역(모눈 아래): CAD 단추 · 미니맵 ── */
+
+:root .wordmark {
+  font-family: var(--font-display);
+  font-size: var(--t-xl);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* 제목: 넓고 무거운 표제 글자 (airborne.studio의 gravity 자리) */
+:root .detail-heading h1,
+:root .panel-title {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+/* 본문 글자: 자간을 살짝 좁히고 한 단계 두껍게 (얇은 글자는 어두운 바탕에서 읽기 어렵다는 의견) */
+:root body {
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+:root .steps .team-row .team-name,
+:root .steps .card-row .step-name,
+:root .phase-title,
+:root .mission-name,
+:root .leaf-name {
+  font-weight: 700;
+}
+
+:root .mission-id,
+:root .orient,
+:root .theme-switch,
+:root .layers {
+  padding: 3px;
+  border: 1px solid var(--float-line);
+  border-radius: var(--r);
+  background: var(--float);
+}
+
+:root .mission-id {
+  gap: 8px;
+  padding-left: 14px;
+}
+
+:root .mission-name {
+  letter-spacing: 0;
+}
+
+:root .cohort select {
+  min-height: 30px;
+  border: 0;
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+}
+
+:root .orient button,
+:root .theme-switch button {
+  min-height: 30px;
+  margin-left: 0;
+  border: 0;
+  border-radius: var(--r);
+  background: none;
+}
+
+:root .orient button {
+  padding: 0 12px 0 10px;
+}
+
+:root .orient button.icon-only,
+:root .theme-switch button {
+  width: 32px;
+  padding: 0;
+}
+
+:root .orient button:hover,
+:root .theme-switch button:hover {
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+:root .orient button[aria-pressed='true'],
+:root .theme-switch button[aria-pressed='true'] {
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+:root .view-switch + .orient,
+:root .orient + .theme-switch {
+  margin-left: 0;
+}
+
+:root .layers {
+  padding-left: 12px;
+}
+
+:root .layer {
+  min-height: 30px;
+  padding: 0 10px 0 4px;
+  border: 0;
+  border-radius: var(--r);
+}
+
+:root .layer:hover {
+  background: color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+:root .layer[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--ink) 16%, transparent);
+}
+
+:root .btn {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 1px solid var(--float-line);
+  border-radius: var(--r);
+  background: var(--float);
+}
+
+:root .btn:hover:not(:disabled) {
+  border-color: var(--ink-3);
+  background: color-mix(in srgb, var(--ink) 10%, var(--paper));
+}
+
+/* 미니맵은 왼쪽 아래: 오른쪽 아래는 배경 지구(호주 · MSP)의 자리다 */
+:root .minimap {
+  right: auto;
+  left: 16px;
+  overflow: hidden;
+  border: 1px solid var(--float-line);
+  border-radius: var(--r);
+  background: var(--float);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.35);
+}
+
+/* ── 팀 표시 = 레이어 색 견본: 레이어 색으로 채운 작은 네모 (CAD 레이어 목록처럼). 번호는 쓰지 않는다 ── */
+
+:root .balloon {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  border-radius: 1px;
+  background: var(--c);
+}
+
+:root .balloon.md {
+  width: 14px;
+  height: 14px;
+}
+
+/* 자료 칸: 이름 옆의 작은 네모 두 개 (왼쪽 Manual, 오른쪽 Workshop) */
+:root .slot {
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--ink-3);
+  border-radius: 1px;
+}
+
+:root .slot.on {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* ── Phase = CAD 원 객체: 속이 빈 원. 선(줄기)은 원의 바탕에 가려 원 테두리에서 끊긴다 ── */
+
+:root .station {
+  border: 3px solid var(--ink); /* 원 테두리: 1.5 → 3px (줄기 3px과 같은 굵기) */
+  border-radius: var(--station-radius);
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: none;
+  font-family: var(--font-mono);
+  font-size: var(--t-md);
+  font-weight: 700;
+  transition: border-color 120ms, color 120ms;
+}
+
+:root .station[data-station='Pre-A'] {
+  font-size: 0.625rem;
+}
+
+:root .phase-head:hover .station {
+  border-color: var(--grip);
+  color: var(--grip);
+}
+
+/* 펼친 Phase = CAD에서 고른 객체: 파란 점선 + 상하좌우 네 곳의 파란 잡기 점 */
+:root .phase-head[aria-expanded='true'] .station {
+  border-style: dashed;
+  border-color: var(--grip);
+  color: var(--grip);
+  background:
+    linear-gradient(var(--grip), var(--grip)) 50% 0 / 7px 7px no-repeat,
+    linear-gradient(var(--grip), var(--grip)) 50% 100% / 7px 7px no-repeat,
+    linear-gradient(var(--grip), var(--grip)) 0 50% / 7px 7px no-repeat,
+    linear-gradient(var(--grip), var(--grip)) 100% 50% / 7px 7px no-repeat,
+    var(--paper);
+}
+
+:root .phase-title {
+  font-weight: 700;
+}
+
+/* 개수 · 코드는 도면 글자(고정폭) */
+:root .step-toggle,
+:root .step-noun,
+:root .team-code,
+:root .step-code {
+  font-family: var(--font-mono);
+}
+
+/* 모델 공간: 마우스는 CAD 십자선 (누를 수 있는 것 위에서는 원래 손가락) */
+:root .steps,
+:root .sheet {
+  cursor: crosshair;
+}
+
+/* ═══ 펼쳐 보기: 모델 공간 ═══ */
+
+:root .steps {
+  margin: 0;
+  padding: 12px 28px 32px;
+  border: 0;
+  background: none;
+}
+
+:root .step-row {
+  background: var(--paper);
+}
+
+/* Phase 이름은 줄기 아래에 둔다 (선 옆에, 선 위가 아니라).
+   이름이 줄기(Across) · 오른쪽 열로 가는 가지(Down)과 같은 높이에 있으면 바탕 상자가 선을 가려 끊겨 보인다.
+   줄기는 정거장 가운데(22px)를 지나고 폭의 절반까지 내려오니, 이름은 그 아래 30px에서 시작한다 */
+:root .steps .phase-head,
+:root .steps .phase-text,
+:root .steps .phase-sub {
+  background: none;
+}
+
+:root .steps .phase-text {
+  padding-top: 30px;
+}
+
+:root .step-row {
+  border-radius: var(--r);
+}
+
+:root .step-toggle {
+  min-width: 28px;
+  height: 20px;
+  border: 0;
+  border-radius: var(--r);
+  background: color-mix(in srgb, var(--ink) 12%, var(--paper));
+}
+
+:root button.step-toggle:hover,
+:root .team-row:hover .step-toggle {
+  background: color-mix(in srgb, var(--ink) 22%, var(--paper));
+}
+
+:root .steps .balloon {
+  width: 12px;
+  height: 12px;
+}
+
+/* 팀을 고르면 나머지 레이어는 흐리게 (CAD의 레이어 잠금 · 흐림처럼) */
+:root .steps[data-team] .team-node:not([data-match]) {
+  opacity: 0.3;
+}
+
+/* 줄기: Pre-A → F 한 줄 */
+:root .steps[data-orient='across'] .steps-trunk::before,
+:root .sheet:not([data-orient='down']) .trunk::before {
+  top: calc(22px - var(--lw-main) / 2);
+  height: var(--lw-main);
+  border: 0;
+  background: var(--ink-2);
+}
+
+:root .steps[data-orient='down'] .steps-trunk::before,
+:root .sheet[data-orient='down'] .trunk::before {
+  left: calc(22px - var(--lw-main) / 2);
+  width: var(--lw-main);
+  border: 0;
+  background: var(--ink-2);
+}
+
+:root .steps .steps-trunk::after {
+  display: none;
+}
+
+/* 줄기는 F 정거장 가운데에서 끝난다 (--trunk-end: hooks/useTrunkEnd.ts가 잰 F 가운데 ~ 줄기 끝 거리). 두 보기 공통 */
+:root .steps[data-orient='across'] .steps-trunk::before,
+:root .sheet:not([data-orient='down']) .trunk::before {
+  right: var(--trunk-end, 0px);
+}
+
+:root .steps[data-orient='down'] .steps-trunk::before,
+:root .sheet[data-orient='down'] .trunk::before {
+  bottom: var(--trunk-end, 0px);
+}
+
+/* 가지 공통: 굵기와 가운데 맞춤. Phase에서 팀으로 내려가는 선은 레이어 없는 회색 */
+:root .steps .kids > li::before,
+:root .steps .kids > li::after {
+  border-color: var(--trace);
+}
+
+:root .steps .kids > li::before {
+  left: calc(var(--k) / -2 - var(--lw) / 2);
+  border-left-width: var(--lw);
+}
+
+:root .steps .kids > li:last-child::before {
+  height: calc(var(--row) / 2 + var(--lw) / 2);
+}
+
+/* 선이 끊기지 않게: 줄 사이 간격(--gap)을 한 곳에서 정하고, 각 줄의 기둥 조각은 위 줄로 간격 + 1px만큼
+   거슬러 올라가 겹친다. 맞닿기만 하면 화면 배율(90% · 110% …)에 따라 반올림 틈이 생긴다 */
+:root .steps {
+  --gap: 2px;
+}
+
+:root .steps .kids > li + li,
+:root .steps[data-orient] .kids > li + li {
+  margin-top: var(--gap);
+}
+
+/* 팀(Subsystem) 카드 사이는 한 단계 더 띄운다. 그 아래 Task Card 사이는 원래 간격 */
+:root .steps .step-phase > .kids {
+  --gap: 18px;
+}
+
+:root .steps .team-node > .kids {
+  --gap: 12px;
+}
+
+:root .steps .kids > li + li::before {
+  top: calc(-1 * var(--gap) - 1px);
+}
+
+:root .steps .kids > li + li:last-child::before {
+  height: calc(var(--row) / 2 + var(--lw) / 2 + var(--gap) + 1px);
+}
+
+/* Across: 위 단계에서 내려오는 선과 첫 줄도 1px 겹친다 (Down의 첫 줄은 가로 지시선 높이에서 시작하므로 제외) */
+:root .steps[data-orient='across'] .kids > li:first-child::before {
+  top: -1px;
+}
+
+:root .steps .kids > li::after {
+  top: calc(var(--row) / 2 - var(--lw) / 2);
+  left: calc(var(--k) / -2);
+  width: calc(var(--k) / 2);
+  border-top-width: var(--lw);
+}
+
+/* 팀 = 레이어: 팀으로 가는 가지와 그 아래 Task Card · Task 선은 늘 그 팀의 레이어 색 */
+:root .steps .kids > .team-node::after,
+:root .steps .team-node .kids > li::before,
+:root .steps .team-node .kids > li::after {
+  border-color: var(--c);
+}
+
+/* Task 선 */
+:root .steps .card-node .kids > li::before {
+  left: calc(var(--k) / -2 - var(--lw-task) / 2);
+  border-left-width: var(--lw-task);
+}
+
+/* Across: Phase 정거장에서 내려오는 가지 */
+:root .steps[data-orient='across'] .step-phase[data-open] > .phase-cell::after,
+:root .steps[data-orient='across'] .step-phase > .kids::before {
+  left: calc(22px - var(--lw) / 2);
+  border-left: var(--lw) solid var(--trace);
+}
+
+:root .steps[data-orient='across'] .step-phase > .kids::before {
+  top: -1px;
+  height: calc(10px + 2px);
+  left: calc(var(--k) / 2 - var(--lw) / 2);
+}
+
+/* 가지 = 둥근 ㄴ자: 기둥에서 카드(줄)로 꺾이는 모서리를 카드 모서리(14px)와 같은 곡률로. 모든 단계(팀 · Task Card · Task)가 같다.
+   ::after가 [세로 R + 가로] 한 조각으로 꺾임을 그리고, 기둥(::before)은 마지막 줄에서 꺾임이 시작하는 곳까지만 이어진다.
+   --w = 그 단계의 선 굵기, --bend = 꺾임 반지름 (Task 줄은 줄 높이가 낮아 조금 작게) */
+:root .steps {
+  --bend: 14px;
+}
+
+:root .steps .kids > li {
+  --w: var(--lw);
+}
+
+:root .steps .card-node > .kids {
+  --bend: 11px;
+}
+
+:root .steps .card-node > .kids > li {
+  --w: var(--lw-task);
+}
+
+:root .steps .kids > li::after {
+  top: calc(var(--row) / 2 + var(--w) / 2 - var(--bend));
+  left: calc(var(--k) / -2 - var(--w) / 2);
+  width: calc(var(--k) / 2 + var(--w) / 2);
+  height: var(--bend);
+  border-top-width: 0;
+  border-left-width: var(--w);
+  border-bottom-width: var(--w);
+  border-bottom-left-radius: var(--bend);
+}
+
+:root .steps .kids > li:last-child::before {
+  height: calc(var(--row) / 2 + var(--w) / 2 - var(--bend) + 1px);
+}
+
+:root .steps .kids > li + li:last-child::before {
+  height: calc(var(--row) / 2 + var(--w) / 2 - var(--bend) + var(--gap) + 2px);
+}
+
+/* Across: 팀 아래 첫 줄은 팀 카드와의 틈(10px)을 거슬러 올라간다. 줄이 하나뿐이면 그만큼 길게 */
+:root .steps[data-orient='across'] .team-node > .kids > li:only-child::before {
+  height: calc(var(--row) / 2 + var(--w) / 2 - var(--bend) + 12px);
+}
+
+/* Down: 첫 줄은 왼쪽 열에서 온 가로선을 그대로 잇는다 (꺾임 없이 곧게) */
+:root .steps[data-orient='down'] .kids > li:first-child::after {
+  top: calc(var(--row) / 2 - var(--w) / 2);
+  height: 0;
+  border-left-width: 0;
+  border-bottom-width: 0;
+  border-top-width: var(--w);
+  border-radius: 0;
+}
+
+/* Across: 팀 가지는 팀 색 견본(12px) 가운데에서 내려온다 */
+:root .steps[data-orient='across'] .team-node > .kids {
+  margin-left: calc(6px - var(--k) / 2);
+}
+
+/* Down: 팀 이름이 두 줄로 꺾여도 팀 색 견본은 첫 줄(가지 높이)에 둔다 */
+:root .steps[data-orient='down'] .team-row {
+  align-items: flex-start;
+}
+
+:root .steps[data-orient='down'] .team-row .balloon {
+  margin-top: 2px;
+}
+
+/* Down: 오른쪽 열로 뻗는 가지도 같은 굵기 · 같은 색 (고른 팀은 팀 색) */
+:root .steps[data-orient='down'] .kids::before {
+  top: calc(var(--row) / 2 - var(--lw) / 2);
+  border-top-width: var(--lw);
+  border-color: var(--trace);
+}
+
+:root .steps[data-orient='down'] .team-node .kids::before {
+  border-color: var(--c);
+}
+
+:root .steps[data-orient='down'] .step-phase > .kids::before {
+  top: calc(22px - var(--lw) / 2);
+}
+
+:root .steps[data-orient='down'] [data-open] > .step-cell {
+  background: linear-gradient(var(--trace), var(--trace)) 0 calc(var(--row) / 2 - var(--lw) / 2) / 100% var(--lw) no-repeat;
+}
+
+:root .steps[data-orient='down'] .team-node[data-open] > .step-cell,
+:root .steps[data-orient='down'] .team-node .card-node[data-open] > .step-cell {
+  background-image: linear-gradient(var(--c), var(--c));
+}
+
+:root .steps[data-orient='down'] .step-phase[data-open] > .phase-cell {
+  background: linear-gradient(var(--trace), var(--trace)) 44px calc(22px - var(--lw) / 2) / 100% var(--lw) no-repeat;
+}
+
+:root .steps-cols {
+  border-bottom: 0;
+  border-radius: var(--r);
+  background: var(--float);
+  padding-left: 14px;
+}
+
+/* 열 이름 = 단계 단추: 누르면 그 단계까지만 펼친다. 지금 단계는 채운 알약 */
+:root .steps-cols {
+  align-items: center;
+  padding: 4px 0 4px 8px;
+}
+
+:root .steps-cols button {
+  justify-self: start;
+  min-height: 26px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-2);
+  font: inherit;
+  font-weight: 700;
+  transition: background-color 120ms, color 120ms, border-color 120ms;
+}
+
+:root .steps-cols button:hover {
+  border-color: var(--line-2);
+  color: var(--ink);
+}
+
+:root .steps-cols button[aria-pressed='true'] {
+  background: var(--select-bg);
+  color: var(--select-fg);
+}
+
+/* 코드(A1): CAD 도면 글자. 상자 없이 레이어 색 고정폭 글자 */
+:root .steps .card-node .step-code,
+:root .leaf-code {
+  min-width: 2.2em;
+  color: var(--c);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Task(A1.1): 옅은 고정폭 글자 */
+:root .steps .task-node .step-code {
+  color: var(--ink-3);
+  font-weight: 500;
+}
+
+:root .leaf-row[aria-current] .leaf-code {
+  color: var(--select-fg);
+}
+
+/* ═══ 전체 보기(도면 한 장)도 같은 모델 공간 위에 ═══ */
+
+:root .sheet {
+  border: 0;
+  background: none;
+}
+
+:root .sheet .trunk::after {
+  display: none;
+}
+
+/* 전체 보기 · 패널 왼쪽 가지도 둥근 ㄴ자: 팀 가지(가로 8px)와 잎 가지(가로 6px)의 꺾임을 그 길이만큼 둥글게 (펼쳐 보기와 같은 모양) */
+:root :is(.sheet, .branch-pane) .team::after {
+  top: 4px;
+  height: 8px;
+  border-top-width: 0;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-bottom-left-radius: 8px;
+}
+
+:root :is(.sheet, .branch-pane) .team:last-child::before {
+  height: 5px;
+}
+
+:root :is(.sheet, .branch-pane) .team + .team:last-child::before {
+  height: 9px;
+}
+
+:root :is(.sheet, .branch-pane) .leaves > li::after {
+  top: 5px;
+  height: 6px;
+  border-top-width: 0;
+  border-left-width: 1px;
+  border-bottom-width: 1px;
+  border-bottom-left-radius: 6px;
+}
+
+:root :is(.sheet, .branch-pane) .leaves > li:last-child::before {
+  height: 5px;
+}
+
+/* 전체 보기 Across도 Phase 이름을 줄기 아래로 (줄기가 글자 위를 지나가지 않게) */
+:root .sheet:not([data-orient='down']) .phase-text {
+  padding-top: 30px;
+}
+
+/* ═══ 노드 카드: 팀과 Task Card는 누르고 싶게 보이는 카드 (테두리 · 두 줄 · 팀 색 점) ═══
+   모양과 큰 글씨는 airborne.studio처럼: 둥근 카드 · 알약 단추, 넓고 무거운 제목 글자, 자간이 좁은 이름 글자.
+   CAD인 것은 바탕(모눈 · 가는 선 · 노드 표시)뿐이다.
+   위 줄 = 코드(팀 색, 고정폭), 아래 줄 = 이름(크고 굵게). 줄 높이(--row)를 카드 높이로 키우면
+   연결선 · 사선 · 노드 표시가 모두 --row로 계산되므로 카드 가운데를 따라온다 */
+
+:root .steps {
+  --row: 44px;
+  --gap: 12px; /* 카드 사이 */
+  --k: 28px; /* 한 단계 들여쓰기: 아래 단계 카드가 위 카드에 붙어 보이지 않게 */
+  --w-team: 210px;
+  --w-card: 300px;
+}
+
+/* Across: 팀 카드와 그 아래 첫 Task Card 사이도 띄운다. 기둥은 그 틈을 거슬러 올라가 팀 카드에 닿는다 */
+:root .steps[data-orient='across'] .team-node > .kids {
+  padding-top: 10px;
+}
+
+:root .steps[data-orient='across'] .team-node > .kids > li:first-child::before {
+  top: -11px;
+}
+
+/* Task 줄은 카드가 아니라 한 줄 글자: 줄 높이를 다시 작게 */
+:root .steps .card-node > .kids {
+  --row: 26px;
+  --gap: 2px;
+}
+
+:root .steps .team-row,
+:root .steps .card-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 10px;
+  row-gap: 1px;
+  min-height: var(--row);
+  padding: 6px 12px 6px 14px;
+  border: 1px solid var(--line-2);
+  border-radius: 14px;
+  background: var(--paper-2);
+  color: var(--ink);
+  text-align: left;
+  transition: border-color 120ms, background-color 120ms;
+}
+
+:root .steps .team-row:hover,
+:root .steps .card-row:has(button.card-hit):hover {
+  border-color: var(--c);
+  background: color-mix(in srgb, var(--c) 10%, var(--paper-2));
+}
+
+/* 펼친 카드: 테두리가 팀 색으로 남는다 */
+:root .steps [data-open] > .step-cell > .team-row,
+:root .steps [data-open] > .step-cell > .card-row {
+  border-color: var(--c);
+}
+
+/* 팀 카드: 코드 앞에 팀 색 점 (위 막대의 팀 점과 같은 모양), 오른쪽에 펼침 개수 */
+:root .steps .team-row {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  column-gap: 7px;
+}
+
+:root .steps .team-row .balloon {
+  grid-column: 1;
+  grid-row: 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+:root .steps[data-orient='down'] .team-row .balloon {
+  margin-top: 0;
+}
+
+:root .steps .team-row .team-code {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--c);
+  font-family: var(--font);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+:root .steps .team-row .team-name,
+:root .steps[data-orient='across'] .team-row .team-name {
+  display: block;
+  grid-column: 1 / 3;
+  grid-row: 2;
+  min-width: 0;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+:root .steps .team-row .step-toggle {
+  grid-column: 3;
+  grid-row: 1 / 3;
+}
+
+/* 팀 카드 폭은 이름 길이와 상관없이 일정하게: Down은 Subsystem 열을 꽉 채우고, Across는 220px */
+:root .steps[data-orient='down'] .team-node > .step-cell {
+  display: flex;
+}
+
+:root .steps[data-orient='down'] .team-row {
+  flex: 1;
+}
+
+:root .steps[data-orient='across'] .team-row {
+  width: 220px;
+}
+
+/* Down: 팀 카드는 위 정렬이 아니라 가운데 정렬 (카드 안에서 두 줄) */
+:root .steps[data-orient='down'] .team-row {
+  align-items: center;
+}
+
+/* Task Card 카드: [위 줄 팀 색 점 + 코드 / 아래 줄 이름] [자료 칸] [+개수]가 한 카드 안에 */
+:root .steps .card-row {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-rows: auto;
+}
+
+/* 코드 + 이름 = 펼침 단추. ::after가 카드 전체를 덮어 카드 어디를 눌러도 펼친다 (자료 칸 · +개수는 그 위에) */
+:root .steps .card-hit {
+  display: grid;
+  grid-template-rows: auto auto;
+  row-gap: 1px;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+:root .steps button.card-hit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+:root .steps button.card-hit:focus-visible {
+  outline: none;
+}
+
+:root .steps .card-row:has(.card-hit:focus-visible) {
+  outline: 1.5px dashed var(--accent);
+  outline-offset: 2px;
+}
+
+:root .steps .card-row > .slots,
+:root .steps .card-row > .step-toggle {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+:root .steps .card-row .step-code {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  grid-row: 1;
+  min-width: 0;
+  font-family: var(--font);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+:root .steps .card-row .step-code::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--c);
+}
+
+:root .steps .card-row .step-name {
+  grid-row: 2;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+
+:root .steps .card-node > .step-cell {
+  align-items: center;
+  gap: 8px;
+}
+
+:root .steps .card-node > .step-cell > .card-row {
+  flex: 1;
+  min-width: 0;
+}
+
+
+/* Task 줄: 카드 없이, 글자만 한 단계 크게 */
+:root .steps .task-row {
+  min-height: var(--row);
+  align-items: center;
+  font-size: var(--t-sm);
+  line-height: 1.3;
+}
+
+:root .steps .task-row .step-name {
+  font-size: var(--t-sm);
+}
+
+/* 펼침 개수: 둥근 알약 */
+:root .step-toggle {
+  min-width: 32px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-family: var(--font);
+  font-size: var(--t-xs);
+  font-weight: 700;
+}
+
+/* Phase 이름 · 정거장 글자: airborne의 넓고 무거운 제목 글자 */
+:root .steps .phase-title {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-stretch: 112%;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+:root .station {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+}
+
+:root .station[data-station='Pre-A'] {
+  font-stretch: 100%;
+}
+
+:root .step-noun {
+  font-family: var(--font);
+}
+
+/* Down: Phase 정거장 가운데(22px) = 첫 팀 카드 가운데(--row / 2) */
+:root .steps[data-orient='down'] .step-phase > .kids {
+  padding-top: calc(22px - var(--row) / 2);
+}
+
+:root .steps[data-orient='down'] .step-phase > .kids > li:first-child::before {
+  top: calc(var(--row) / 2);
+}
+
+@media (max-width: 1360px) and (min-width: 1001px) {
+  :root .steps {
+    --w-team: 190px;
+    --w-card: 270px;
+  }
+}
+
+/* ═══ 패널 왼쪽 가지 (펼쳐 보기에서 열었을 때): 펼쳐 보기와 같은 카드를 좁은 칸에 ═══ */
+
+:root .step-branch {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: visible;
+}
+
+:root .step-branch .step-phase,
+:root .step-branch .step-phase[data-open] {
+  min-width: 0;
+  max-width: none;
+  padding: 0;
+}
+
+:root .step-branch .team-row {
+  width: 100%;
+}
+
+/* 옆 패널에 열린 Task Card: 팀 색 테두리 + 진한 물든 바탕 */
+:root .steps .card-row[aria-current] {
+  border-color: var(--c);
+  background: color-mix(in srgb, var(--c) 22%, var(--paper-2));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  :root .mission-id,
+  :root .orient,
+  :root .theme-switch,
+  :root .layers,
+  :root .btn,
+  :root .minimap,
+  :root .steps-cols {
+    background: var(--paper-2);
+    backdrop-filter: none;
+  }
+}

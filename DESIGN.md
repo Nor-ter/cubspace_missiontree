@@ -1,378 +1,359 @@
 ---
 name: Mission Tree
-description: The whole satellite mission as one engineering drawing, plotted by day and starlit by night, with each Phase as a detail view.
+description: The whole satellite mission as a CAD model space under an airborne-style bar, opened one step at a time or read as one sheet.
 colors:
-  paper: "oklch(0.985 0.004 240)"
-  paper-raised: "oklch(0.962 0.006 240)"
-  desk-sky: "oklch(0.9 0.035 232)"
-  ink: "oklch(0.25 0.016 255)"
-  ink-secondary: "oklch(0.44 0.016 255)"
-  ink-tertiary: "oklch(0.56 0.014 255)"
-  hairline: "oklch(0.84 0.008 250)"
-  branch-line: "oklch(0.66 0.012 250)"
-  layer-sys: "oklch(0.25 0.016 255)"
-  layer-box: "oklch(0.6 0.19 332)"
-  layer-eps: "oklch(0.5 0.2 27)"
-  layer-adcs: "oklch(0.66 0.17 148)"
-  layer-com: "oklch(0.56 0.1 220)"
-  layer-obc: "oklch(0.45 0.17 262)"
-  layer-pay: "oklch(0.74 0.15 80)"
-  alert: "oklch(0.52 0.19 27)"
+  paper: "#fbf4e6"
+  paper-raised: "#fffaf0"
+  ink: "#191919"
+  ink-secondary: "#57534b"
+  ink-tertiary: "#8c867a"
+  hairline: "#e6dccb"
+  control-line: "#bdb3a2"
+  trace: "#8c867a"
+  grip: "#1f6fd1"
+  alert: "#d7261e"
+  layer-sys: "#3b3833"
+  layer-box: "#a3609f"
+  layer-eps: "#bf625c"
+  layer-adcs: "#bb7a3f"
+  layer-com: "#4a92a3"
+  layer-obc: "#5f70b3"
+  layer-pay: "#9c8530"
+  paper-night: "#191919"
+  paper-raised-night: "#232220"
+  ink-night: "#fbf4e6"
+  ink-secondary-night: "#b0aa9e"
+  ink-tertiary-night: "#7d7870"
+  hairline-night: "#2c2a27"
+  control-line-night: "#4d4a44"
+  trace-night: "#8a857b"
+  grip-night: "#4d9bff"
+  alert-night: "#ff6b5e"
+  layer-sys-night: "#e8e1d3"
+  layer-box-night: "#dba8d8"
+  layer-eps-night: "#eba7a2"
+  layer-adcs-night: "#efbe91"
+  layer-com-night: "#9fd0dc"
+  layer-obc-night: "#aab6e8"
+  layer-pay-night: "#e6d595"
+  bar: "#191919"
+  bar-ink: "#fbf4e6"
 typography:
+  wordmark:
+    fontFamily: "Archivo Variable, Inter Tight Variable, sans-serif"
+    fontSize: "1.1875rem"
+    fontWeight: 900
+    letterSpacing: "-0.01em"
+    fontVariation: "'wdth' 125"
   display:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontFamily: "Archivo Variable, Inter Tight Variable, sans-serif"
     fontSize: "1.875rem"
-    fontWeight: 600
-    lineHeight: 1.15
+    fontWeight: 900
+    lineHeight: 1.05
     letterSpacing: "-0.015em"
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
+    fontVariation: "'wdth' 125"
   headline:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontFamily: "Archivo Variable, Inter Tight Variable, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 600
+    fontWeight: 900
+    lineHeight: 1.05
+    letterSpacing: "-0.015em"
+    fontVariation: "'wdth' 125"
+  phase-title:
+    fontFamily: "Archivo Variable, Inter Tight Variable, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 800
     lineHeight: 1.2
     letterSpacing: "-0.01em"
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  title:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
-    fontSize: "1rem"
-    fontWeight: 600
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  phase-title:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
-    fontSize: "0.8125rem"
-    fontWeight: 600
-    lineHeight: 1.25
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  body:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontVariation: "'wdth' 112"
+  station:
+    fontFamily: "Archivo Variable, Inter Tight Variable, sans-serif"
     fontSize: "0.875rem"
-    fontWeight: 400
+    fontWeight: 900
+    fontVariation: "'wdth' 125"
+  card-name:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontSize: "0.9375rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "-0.015em"
+  card-code:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontSize: "0.6875rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "0.06em"
+  body:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 500
     lineHeight: 1.45
+    letterSpacing: "-0.01em"
     fontFeature: "tnum"
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  body-sm:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
-    fontSize: "0.8125rem"
-    fontWeight: 400
-    lineHeight: 1.35
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  label:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+  task:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 500
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  leaf:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    lineHeight: 1.3
+  label:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
+    fontSize: "0.8125rem"
+    fontWeight: 500
+  count:
+    fontFamily: "Inter Tight Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
     fontSize: "0.75rem"
+    fontWeight: 700
+  drawing-code:
+    fontFamily: "JetBrains Mono Variable, ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "0.6875rem"
+    fontWeight: 700
+  drawing-note:
+    fontFamily: "JetBrains Mono Variable, ui-monospace, SF Mono, Menlo, monospace"
+    fontSize: "11px"
     fontWeight: 400
-    lineHeight: "15px"
-    letterSpacing: "-0.005em"
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  code:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
-    fontSize: "0.75rem"
-    fontWeight: 600
     letterSpacing: "0.04em"
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
-  caption:
-    fontFamily: "Geologica Variable, -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif"
-    fontSize: "0.75rem"
-    fontWeight: 400
-    lineHeight: 1.4
-    fontVariation: "'CRSV' 1, 'SHRP' 0"
 rounded:
-  none: "0"
-  satellite: "3px"
+  tool: "2px"
+  card: "14px"
+  pill: "999px"
   circle: "50%"
 spacing:
-  xxs: "4px"
-  xs: "6px"
-  sm: "8px"
-  md: "12px"
-  lg: "16px"
-  xl: "20px"
-  2xl: "24px"
-  3xl: "32px"
+  card-gap: "12px"
+  team-gap: "18px"
+  task-gap: "2px"
+  indent: "28px"
+  row-card: "44px"
+  row-task: "26px"
+  page-x: "28px"
 components:
-  button:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
+  bar-pill:
+    backgroundColor: "{colors.paper-raised-night}"
+    textColor: "{colors.bar-ink}"
     typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 10px"
-    height: "32px"
-  button-hover:
+    rounded: "{rounded.pill}"
+    height: "30px"
+  bar-pill-selected:
+    backgroundColor: "{colors.bar-ink}"
+    textColor: "{colors.bar}"
+  tool-button:
     backgroundColor: "{colors.paper-raised}"
     textColor: "{colors.ink}"
-  button-active:
-    backgroundColor: "{colors.hairline}"
-  button-disabled:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink-tertiary}"
-  button-icon-only:
-    rounded: "{rounded.none}"
-    size: "32px"
-  segment:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
     typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 10px 0 8px"
-    height: "30px"
-  segment-selected:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-  segment-icon-only:
-    rounded: "{rounded.none}"
-    width: "32px"
-    height: "30px"
-  select:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 26px 0 8px"
-    height: "30px"
-  layer-toggle:
+    rounded: "{rounded.tool}"
+    padding: "0 14px"
+    height: "34px"
+  level-pill:
     backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    typography: "{typography.label}"
-    rounded: "{rounded.none}"
-    padding: "0 8px 0 5px"
-    height: "32px"
-  layer-toggle-active:
-    backgroundColor: "{colors.paper-raised}"
-  step-tab:
-    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink-secondary}"
-    rounded: "{rounded.none}"
-    padding: "0 12px 0 14px"
-    height: "36px"
-  step-tab-selected:
-    textColor: "{colors.ink}"
-    height: "37.5px"
+    rounded: "{rounded.pill}"
+    padding: "0 12px"
+    height: "26px"
+  level-pill-selected:
+    backgroundColor: "{colors.grip}"
+    textColor: "#ffffff"
   phase-station:
     backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
+    typography: "{typography.station}"
     rounded: "{rounded.circle}"
     size: "44px"
-  phase-station-hover:
-    backgroundColor: "{colors.desk-sky}"
+  phase-station-open:
+    textColor: "{colors.grip}"
+  node-card:
+    backgroundColor: "{colors.paper-raised}"
     textColor: "{colors.ink}"
-  phase-station-night:
-    rounded: "{rounded.satellite}"
-  phase-station-detail:
-    size: "64px"
-  team-balloon:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.circle}"
-    size: "18px"
-  team-balloon-md:
-    size: "24px"
-  material-slot-empty:
+    typography: "{typography.card-name}"
+    rounded: "{rounded.card}"
+    padding: "6px 12px 6px 14px"
+    height: "44px"
+  team-card:
+    width: "220px"
+  count-pill:
+    typography: "{typography.count}"
+    rounded: "{rounded.pill}"
+    padding: "0 8px"
+    height: "22px"
+  material-slot:
     backgroundColor: "transparent"
-    rounded: "{rounded.none}"
-    size: "8px"
+    rounded: "{rounded.tool}"
+    size: "9px"
   material-slot-filled:
     backgroundColor: "{colors.ink}"
-    rounded: "{rounded.none}"
+    size: "9px"
+  team-dot:
+    rounded: "{rounded.circle}"
     size: "8px"
-  leaf-current:
-    backgroundColor: "{colors.ink}"
-    textColor: "{colors.paper}"
-    typography: "{typography.leaf}"
-    rounded: "{rounded.none}"
-  gate-number:
-    backgroundColor: "transparent"
-    textColor: "{colors.ink}"
-    typography: "{typography.code}"
-    rounded: "{rounded.none}"
-    size: "20px"
   minimap:
-    backgroundColor: "{colors.paper}"
-    textColor: "{colors.branch-line}"
-    rounded: "{rounded.none}"
+    backgroundColor: "{colors.paper-raised}"
+    rounded: "{rounded.tool}"
 ---
 
 # Design System: Mission Tree
 
+This file describes **frontend_v3** (port 5175), the version that joins v1's step-by-step expansion with v2's whole-mission drawing. The v2 system ("One Drawing, Day and Night", Geologica, cool paper, square corners) lives in git history and in `frontend_v2`.
+
 ## Overview
 
-**Creative North Star: "One Drawing, Day and Night"**
+**Creative North Star: "Model Space Under an Airborne Bar"**
 
-The interface is one engineering drawing laid under a sky. By day it is a sheet plotted on cool white paper in graphite ink, resting on a pale daytime sky. By night it is the same drawing in starlit linework on blue-grey paper, resting on a deep navy sky scattered with sparse stars. The user picks Day, Night or Auto from the top bar; Auto follows the computer. Drawing grammar (part-number balloons, leader and branch lines, a trunk with an arrowhead, a gate diamond, numbered steps) appears only where it carries information. It is never ornament.
+The mission is drawn in a CAD model space: a gridded workspace with a faint space drawing behind it, in which the satellite mission is a drawing and every team is a layer. On top sits a band that is not CAD at all: a warm-black strip with cream rounded pills, borrowed from airborne.studio. The split is deliberate. The bar is the product's voice and the workspace is the instrument. In the workspace, only the ground is CAD: grid, linework, selection grips and drawing notes. The things you press (team and Task Card nodes) are rounded airborne cards that look clickable.
 
-This is an operate-mode tool. The world lends type, palette, density and one family of real-element motion, and nothing else. Controls stay standard: a select is a select, a tab is a tab, a button is a thin-ruled rectangle. Density is high and calm, like a full drawing sheet. Hierarchy comes from line weight, ink value and type weight, never from fills, cards or shadows. The one place the theme changes form rather than colour is the Phase station: an Earth with a graticule by day, a square satellite body whose solar wings unfold on hover by night, and the detail transition follows that shape.
+This is an operate-mode tool for students who come in cold. It always opens on **Step by step**, with nothing expanded. They open one Phase, then a Subsystem, then a Task Card, then that card's materials. **Whole sheet** puts everything on one drawing for people who already know their way. Both views lead to the same Phase detail and the same material panel.
 
-Confirmed rejections in the build: no dashboard of cards, no collapsible outline, no cream paper, no decorative chrome, no workshop progress status.
+Confirmed rejections from the iterations: no green anywhere (it hurt the eyes), no neon or high-chroma team colours, no team numbers (they read as an order), no diagonal connectors, no circuit-board traces or wiring harness motif, no subway map, no Earth-to-orbit "ascent" trunk, no line after the F station, no workshop progress status.
 
 **Key Characteristics:**
-- Cool paper and graphite ink on a sky-coloured desk; hierarchy by line weight and ink value.
-- Seven team colours borrowed from CAD layer colours, each paired with a numbered balloon.
-- One typeface, Geologica Variable with its soft (CRSV) letterforms on, tabular figures throughout.
-- Square corners on every control and region; rounded or circular forms only on drawing symbols.
-- Selection is ink inversion; focus is a dashed ink outline, like a selected CAD object.
-- Flat. Two shadows in the whole system: the floating minimap and the mobile full-screen panel.
-- Motion moves the real elements: the Phase head and team branches travel; nothing is a screenshot cross-fade.
+- Two airborne colours, warm black `#191919` and cream `#FBF4E6`, carry both themes; Night (black ground) is the product's default face.
+- The workspace is a CAD model space: a 16 / 80px grid, a crosshair cursor, a CAD-drafted Earth, moon and orbit drawn faintly behind the content.
+- Teams are layers: pastel layer colours, told apart by colour and code, never by number.
+- Rounded everything that you touch: 14px cards, pill counts and pill bar controls; rounded "ㄴ" elbows on every connector, curved to the card radius.
+- One line weight for the whole step tree (2.25px), so the trunk, branches and task lines read as one drawing.
+- Selection is CAD selection: grip blue, a dashed outline and four square grips.
+- Motion moves the real cards (FLIP); nothing cross-fades a screenshot.
 
 ## Colors
 
-A near-monochrome ink-on-paper palette with seven layer colours held in reserve. All values are OKLCH custom properties in `frontend/src/styles/global.css`. The frontmatter records Day; every neutral, layer and alert token is redefined for Night (values in the sidecar), which applies when `data-theme="night"` is set or when no theme is stored and the system prefers dark. `main.tsx` applies the stored theme before first paint.
+Two airborne neutrals, CAD selection blue, and seven pastel layer colours. All values are custom properties in `frontend_v3/src/styles/global.css`. The bar's colours are overridden locally in `frontend_v3/src/styles/cad.css`. Day is declared in `:root` and Night in `:root[data-theme='night']`. The page always carries a resolved `data-theme` of `day` or `night`; `theme.ts` turns Auto into one of them.
 
 ### Primary
-- **Graphite Ink** (`--ink`): all primary text, Phase station outlines, the gate box frame, group rules, the minimap frame, every selected state. By night it becomes pale starlight linework.
+- **Warm Black / Cream** (`--ink` / `--paper`): by Night, cream text on a warm-black model space; by Day, the reverse. All names, station rings, filled material slots.
 
 ### Secondary
-- **CAD Layer Colours** (`--team-*`): seven team colours on the AutoCAD index pattern (red, yellow, green, cyan, blue, magenta, ink). SYS is ink itself. Darkened to read on paper by day, brightened by night. Lightness is deliberately spread (ink 0.25, obc 0.45, eps 0.5, com 0.56, box 0.6, adcs 0.66, pay 0.74) so teams stay distinguishable under colour-vision deficiency. Each layer has a paired `--team-*-on` digit colour (paper or ink) for a filled balloon; by night every layer is light, so all digits are dark paper.
+- **Grip Blue** (`--grip`, Day `#1f6fd1`, Night `#4d9bff`): CAD selection. The expanded Phase station (dashed ring and grips), a hovered station, the pressed level pill, focus outlines, text selection. It is the only accent and it always means "selected / in focus".
+- **Pastel Layers** (`--team-*`): seven team colours on the CAD layer pattern, softened to pastels. By Day they are mid-light so they still read as text on cream. By Night they are light pastels. There is **no green**: ADCS, which was green in v2, is now orange. SYS is the theme's opposite neutral.
 
 ### Tertiary
 - **Alert Red** (`--alert`): viewer error titles only.
 
 ### Neutral
-- **Plot Paper** (`--paper`): sheets, panel, top bar, buttons, balloon and station fills.
-- **Raised Paper** (`--paper-raised`, source `--paper-2`): one step up; hover fills, the pressed layer toggle, the notebook guide strip, satellite solar panels.
-- **Desk Sky** (`--desk`): the background around the sheet. Pale daytime blue by day (also the Day station hover fill); deep navy by night, under the `--sky-art` star field (five sparse radial-gradient stars tiled at 347 × 263px).
-- **Secondary Ink** (`--ink-secondary`, source `--ink-2`): codes, counts, meta lines, unselected tabs, labels such as "Mission:", "Tree", "Team". At least 7:1 on paper.
-- **Tertiary Ink** (`--ink-tertiary`, source `--ink-3`): disabled text only.
-- **Hairline** (`--hairline`, source `--line`): row dividers, the top-bar rule, the Earth graticule, unlit minimap lines, button active fill.
-- **Branch Line** (`--branch-line`, source `--line-2`): trunk, stems, team and workshop branches, sheet frame, control borders, empty-slot dashes, unlit minimap text.
+- **Raised Paper** (`--paper-2`): node cards, panel, floating tool surfaces.
+- **Trace** (`--trace`): lines without a layer: the trunk and the line from a Phase down to its teams.
+- **Secondary Ink** (`--ink-2`, ≥7:1): counts, meta lines, unpressed level pills, labels.
+- **Tertiary Ink** (`--ink-3`): task codes, empty slot borders, disabled.
+- **Hairline / Control Line** (`--line`, `--line-2`): card borders at rest, control borders, empty states.
+- **Float** (`--float`, `--float-line`): translucent surfaces that sit on the grid (tool buttons, column header, minimap), with a solid fallback under `prefers-reduced-transparency`.
 
 ### Named Rules
-**The Ink Inversion Rule.** Selection is ink fill with paper text (`--select-bg` / `--select-fg`). There is no accent colour for "selected": a pressed segment, the active theme, the open workshop leaf, the night Phase station on hover and text selection all invert.
+**The Bar Is Always Dark Rule.** The top bar is warm black with cream text in both themes. Its team dots use the Night pastels, because the Day SYS grey would disappear on black.
 
-**The Layer Reserve Rule.** At rest, team colour appears only as the 1.5px ring of each numbered balloon. Picking a team layer fills that team's balloons, recolours its branch lines and its detail group rule, and fades every other team, and every Phase without that team, to opacity 0.5. Team colour never fills a surface, a text block or a button. The minimap is the one sanctioned exception: it fills the balloons and tick of the path currently being viewed in their layer colours, whether or not a layer is picked, and sets the lit workshop codes in the layer colour mixed 62% toward ink (`color-mix(in oklab, …)`, never oklch, which would turn yellow green) so 8px codes stay legible.
+**The No Green Rule.** No token, layer or highlight may be green or neon.
 
-**The Two Skies Rule.** Night is not an inverted Day. Any new colour token is declared for Day in `:root` and for Night in the single `:root[data-theme='night']` block. The page always carries a resolved `data-theme` of `day` or `night`: `frontend/src/features/feature_a/theme.ts` turns the Auto choice (`data-theme-mode="auto"`) into day or night from `prefers-color-scheme` and follows the system while Auto is chosen, so there is no media-query copy of the night values to keep in step.
+**The Layer Rule.** A team's colour belongs to its whole branch: the line into the team, the line into its Task Cards and tasks, the dot on every card, the code text, and the card border on hover, when open or when current. It tints surfaces only by mixing: 10% on hover and 22% for the Task Card open in the panel. Picking a team in the bar fades every other team to 0.3.
+
+**The Two Themes Rule.** Every new colour is declared for Day and for Night. Night is the reference look.
 
 ## Typography
 
-**Font:** Geologica Variable (with -apple-system, Apple SD Gothic Neo, Segoe UI, sans-serif), loaded from `@fontsource-variable/geologica`, with `font-variation-settings: 'CRSV' 1, 'SHRP' 0`.
+**Display Font:** Archivo Variable, at width 112–125% and weight 800–900 (stands in for airborne's wide heavy display face).
+**Body Font:** Inter Tight Variable, weight 500 by default and 700 for names (stands in for Neue Haas Grotesk Display).
+**Drawing Font:** JetBrains Mono Variable, for things that sit on the drawing as notation.
 
-**Character:** One engineered sans with its soft cursive-leaning letterforms switched on: technical in skeleton, friendly in detail. A separate semi-condensed label face was dropped because it read as stiff; `--font-narrow` survives only as a role alias of `--font`. Figures are tabular everywhere. Its large x-height lets workshop leaves sit one step smaller (12px) than reading text and still read.
+**Character:** A wide, heavy display face for things you navigate to, set against a tight grotesk for things you read. The monospace appears only where the CAD drawing speaks: leaf codes on the sheet, station-like codes, and notes in the background art. Body weight was raised to 500 because thin text was hard to read on the dark ground.
 
 ### Hierarchy
-The size scale steps by roughly 1.15 from 0.75rem to 1.875rem (`--t-xs` to `--t-3xl`). Weights are 400, 500 and 600.
-- **Display** (600, 1.875rem, 1.15, -0.015em): the Phase detail sheet heading only; 1.5rem below 1000px.
-- **Headline** (600, 1.5rem, 1.2, -0.01em): the workshop panel title.
-- **Title** (600, 1rem): wordmark, gate heading, empty-state and viewer-state titles, the station letter.
-- **Phase Title** (600, 0.8125rem, 1.25, balanced wrap): Phase names beside the stations.
-- **Body** (400, 0.875rem, 1.45): reading text; cap prose at 70ch.
-- **Body Small** (400, 0.8125rem): task descriptions, workshop source lines, the guide strip.
-- **Label** (500, 0.8125rem): buttons, toggles, selects, segments; tabs at 0.875rem.
-- **Leaf** (400, 0.75rem, 15px line, -0.005em): workshop leaves on the sheet; codes beside them at 0.6875rem in secondary ink.
-- **Code** (600, 0.75rem, 0.04em): team codes and group codes. These codes are natively capitals; no `text-transform` is used anywhere.
-- **Caption** (400, 0.75rem): counts, legend text, review sources, gate step detail.
+- **Wordmark** (Archivo 900, width 125%, 1.1875rem, uppercase): "MISSION TREE" in the bar; 1rem at ≤1360px.
+- **Display** (Archivo 900, width 125%, 1.875rem, 1.05): the Phase detail heading; 1.5rem on narrow screens.
+- **Headline** (Archivo 900, width 125%, 1.5rem): the material panel title.
+- **Phase Title** (Archivo 800, width 112%, 0.9375rem, 1.2): Phase names under the trunk in Step by step.
+- **Station** (Archivo 900, width 125%, 0.875rem): the letter in a Phase circle; "Pre-A" drops to 0.625rem at width 100%.
+- **Card Name** (Inter Tight 700, 0.9375rem, −0.015em): the lower line of a team or Task Card card.
+- **Card Code** (Inter Tight 700, 0.6875rem, +0.06em, in the layer colour): the upper line (SYS, A1).
+- **Task** (Inter Tight 500, 0.8125rem): task rows under a Task Card; their code (A1.1) in tertiary ink.
+- **Body** (Inter Tight 500, 0.875rem, 1.45, −0.01em, tabular figures).
+- **Count** (Inter Tight 700, 0.75rem): "+6" in count pills.
+- **Drawing Code / Note** (JetBrains Mono, 0.6875rem 700 / 11px 400): sheet leaf codes, and dimension and label text in the background art.
 
 ### Named Rules
-**The Lettering Rule.** One family carries everything. Distinguish a code from a name by weight, ink value and tracking, never by switching face.
+**The Notation Rule.** Mono is for notation on the drawing, not for UI labels. A code inside a card is Inter Tight in the layer colour.
 
 ## Layout
 
-The page is a sticky 52px top bar over a desk of sky. On the desk sits one sheet: a 1px branch-line frame, paper fill, 16px margin, 20px padding.
+A sticky 60px bar sits over a full-viewport grid. `CadSpace` is a fixed layer behind everything, at `z-index: −1`.
 
-**Across (default).** A horizontal trunk runs left to right from the first station's centre to an arrowhead at the right edge. Seven Phase columns sit on a weighted grid (0.9 / 1.05 / 1.1 / 1.05 / 1 / 1 / 0.9 fr, 14px gaps) so the busiest Phases get the most width. Each column drops a stem to team balloons, which drop branches to workshop leaves. The legend sits under the first column; the first column reserves the legend's measured height and the last two reserve the minimap's measured height (`--minimap-h`) so nothing sits under the floating map.
+**Step by step, Across (default).** A horizontal trunk runs from the Pre-A station to the F station and ends at F's centre (`--trunk-end`, measured by `hooks/useTrunkEnd.ts`). Phase names sit 30px below the trunk, so the line never runs through text. Opening a Phase drops a vertical stem to team cards (220px wide, 18px apart). Each team drops a stem to Task Card cards (12px apart). Each card drops a stem to task rows (26px rows, 2px apart). Each level is indented 28px (`--k`). Collapsed Phases are spaced evenly. An open Phase widens its column and the others move aside.
 
-**Down.** The trunk runs top to bottom with a downward arrowhead. Each Phase is one row: a 230px head column, then a horizontal branch on which teams stand in seven fixed columns by team number, so SYS is always column 1 and PAY column 7. The legend moves below the trunk. The choice is stored per browser.
+**Step by step, Down.** The trunk runs top to bottom. Each Phase is a row whose branch runs right through four columns, with a header bar above: **Phase · Subsystem · Materials · Task**. The column names are level pills. Pressing one expands the whole tree to that level, and pressing the active one again collapses a level. Column widths are 210 / 300px (`--w-team`, `--w-card`), dropping to 190 / 270px at ≤1360px.
 
-**Detail sheet.** Same frame with 24px 28px padding: header (64px station, display heading, meta line, Whole mission / previous / next), the gate box, a Tasks tool row (Expand all / Collapse all), then team groups in CSS multi-column (340px columns, 32px gap), with the legend at the foot.
+**Whole sheet.** The whole mission on one drawing: seven Phase columns along the trunk, each with team code headers and leaf rows (code, name, two slots). Connector lines are thin (1px) at this density, but use the same rounded elbows.
 
-**Workshop open.** Whichever view it was opened from, the workspace becomes two columns: on the left a branch pane holding that Phase's column at its sheet width (sticky, full viewport height), on the right the panel. The panel can widen to full width, which hides the branch. Closing returns to the view it was opened from.
+**Phase detail.** Opened from a station. It has a framed sheet with a display heading, the gate box ("To close Phase X", numbered steps), Expand all / Collapse all, and team groups of Task Card rows.
 
-**Breakpoints.** At 1360px the sheet tightens (8px column gaps, smaller leaves, 7px slots). At 1100px the top bar wraps, the Tree toggle hides and layer toggles drop to their own row. At 1000px the trunk stacks to one column, the branch pane and minimap hide, and the panel becomes a fixed full-screen overlay.
+**Material panel.** Opening a Task Card's material turns the workspace into two columns: a branch pane on the left and the panel on the right. The pane takes the shape of the view it came from. From Step by step it is a narrow (300px) column of the same rounded cards, keeping the expansion state, with the current card tinted. From Whole sheet or detail it is the sheet-style branch. The panel has a crumb, a headline title, Manual > Workshop > Tasks chevron tabs and a viewer, and it can go full width. Esc returns to the original view with its scroll and expansion intact.
 
-Spacing rhythm is small and dense: 4, 6, 8, 12 inside components; 16, 20, 24, 32 between regions.
+**Minimap.** Floats 16px from the bottom-left (the bottom-right belongs to the Earth drawing) and collapses to a button. In Down mode and in the branch pane it can cover the lowest left nodes; this is an open issue.
+
+**Breakpoints.** At ≤1360px the bar drops the "Mission:" label and tightens, and step columns narrow. At ≤1000px the panel becomes a full-screen overlay and the branch pane and minimap hide.
 
 ## Elevation & Depth
 
-Flat. Depth is carried by line weight (1px hairline, 1px branch line, 1.5px ink symbol and frame rules, 2px gate diamond) and by one paper step (`--paper-raised`). The sheet separates from the desk by colour, not by shadow. Two things genuinely float above the sheet and only they cast a shadow.
+Mostly flat. Depth comes from the ground and the line, not from shadow. The grid is the deepest layer. The CAD space drawing sits on it at 10–38% opacity (MSP marker at 70%). Then come cards on raised paper with a 1px border. Floating tools use translucent `--float` with a hairline.
 
 ### Shadow Vocabulary
-- **Minimap float** (`box-shadow: 0 6px 20px rgb(0 0 0 / 0.14)`): the fixed bottom-right minimap, which overlaps the sheet.
-- **Mobile panel lift** (`box-shadow: 0 -8px 32px rgb(0 0 0 / 0.18)`): the workshop panel only when it becomes a full-screen overlay below 1000px.
-
-A picked detail group draws its rule twice (`box-shadow: 0 1px 0` in the layer colour). That is a line doubling to 2px, not elevation.
+- **Minimap float** (`box-shadow: 0 2px 8px rgb(0 0 0 / 0.35)`): the only shadow on the workspace.
+- **Mobile panel lift** (inherited from v2, `0 -8px 32px rgb(0 0 0 / 0.18)`): the full-screen panel below 1000px.
 
 ### Named Rules
-**The Plotter Rule.** A plotter cannot draw a shadow. Nothing on the sheet casts one; separate things with a line or a paper step. Only an object that floats over the sheet may lift.
+**The Ground Is Drawn Rule.** The background is a drawing, not a texture. Every element in it is a CAD entity: grid, graticule, coastline, orbit, dimension lines, leader notes. It stays faint enough that no node ever competes with it.
 
 ## Shapes
 
-Square corners on every rectangle that is a control or a region: buttons, selects, segments, tabs, toggles, sheets, panel, gate box, gate step numbers, minimap (radius 0). Rounded and circular forms belong only to drawing symbols:
-- **Team balloons:** circles (18px, 24px in detail groups) with 1.5px rings.
-- **Phase stations:** by day an Earth, a 44px circle (64px in detail) with a hairline graticule; by night a satellite, the same box with 3px corners and two 12 × 18 solar panels on struts, folded to zero width at rest. The shape comes from theme tokens (`--station-radius`, `--station-globe`, `--station-wings`, `--station-gap`).
-- **Material slots:** 8px squares, dashed branch line when empty, solid ink when filled (left = technical manual, right = notebook). Empty states enlarge it to a 28px dashed square.
-- **Gate mark:** a 10px square rotated 45° with a 2px ink stroke.
-- **Step tabs:** chevron tips drawn as 1.5px SVG strokes.
-- **Icons:** 16px single-path SVG strokes, 1.5 stroke, square caps.
+- **Cards** (team, Task Card): 14px radius, 1px border, raised paper. The card is the click target.
+- **Pills**: bar controls, the view switch, level pills and count pills (999px).
+- **Tool buttons and floating surfaces in the workspace**: 2px corners (`--r`), the one CAD-square remnant.
+- **Phase station**: a 44px hollow circle with a 3px ink ring (a CAD circle object). When expanded, the ring turns grip-blue and dashed, with four 7px square grips at the compass points.
+- **Team dot**: an 8px filled circle in the layer colour, the same in the bar, on team cards and before Task Card codes. No numbers.
+- **Material slots**: two 9px squares after a Task Card (left Technical manual, right Workshop); filled ink when the material exists, a tertiary-ink outline when not yet written.
+- **Connectors**: one rounded "ㄴ" elbow per child. The `::after` of each list item draws the vertical end and the horizontal run as one piece, with `border-bottom-left-radius` equal to the bend: 14px for card rows (the card radius) and 11px for task rows. The stem (`::before`) stops where the bend starts. Every connector in Step by step is 2.25px (`--lw`, with `--lw-task` and `--lw-main` aliased to it). In Whole sheet and the sheet-style pane they are 1px with 8 / 6px bends. Down's first child continues the incoming horizontal line straight, without a bend.
 
 ## Components
 
-### Buttons
-Thin-ruled, square, quiet.
-- **Shape:** square corners, 32px tall, 32px square when icon-only.
-- **Default:** paper fill, ink text, 1px branch-line border, label 500, 6px icon gap, 0 10px padding.
-- **Hover / Active:** border goes to ink and fill to raised paper (150ms); active fills hairline.
-- **Disabled:** hairline border, tertiary ink.
-- **Text action:** "Next: notebook" is underlined ink text (1px, 3px offset), no box.
+### Top Bar
+A warm-black band, 60px, with groups of cream pills: the wordmark; Mission + cohort select; the Step by step / Whole sheet switch; Across / Down; Day / Night / Auto (sun, orbiting satellite, half disc); and Team, showing layer toggles as a dot plus a code. A pressed pill inverts to cream with black text.
 
-### Segmented Switches
-Abutting 30px square segments that share borders (-1px overlap), branch-line borders, paper fill; hover raises the border to ink; the selected segment inverts to ink. Used for Tree Across / Down (arrow icon plus word), the notebook switcher, and the Day / Night / Auto theme switch, which is icon-only (32px wide, name in the tooltip): a sun, a planet with a 1px orbit, and a half-filled disc. While Night is active a 1.8px satellite square travels the orbit (6s loop, static under reduced motion).
+### Node Cards
+Two lines in a grid: dot + code (layer colour) above, the name (700) below, with material slots and a count pill on the right. Hover gives a layer-colour border and a 10% tint. An open card keeps the layer border. The card open in the material panel (`aria-current`) gets a 22% tint. On a Task Card, an invisible button covers the whole card (`.card-hit::after`) to toggle tasks; the slots and count sit above it at `z-index: 1`. Focus draws the dashed grip outline around the whole card.
 
-### Inputs / Fields
-- **Cohort select:** square, 30px, branch-line border, paper fill, label type, native appearance removed; the chevron is a CSS mask filled with secondary ink so it follows the theme. Hover raises the border to ink.
-- **Focus:** the global 1.5px dashed ink outline at 2px offset.
+### Phase Head
+A station, then the name under the trunk, then a count pill and "N teams". Hovering turns the ring and letter grip-blue. Pressing toggles the Phase open or closed in place (no page change).
 
-### Navigation
-- **Top bar:** sticky, 52px, paper with a hairline underneath, held in place during view transitions. Wordmark (title, 600); "Mission:" in secondary ink before the mission name, then the cohort select behind a hairline divider; then Tree, theme and Team groups at the right, each led by a quiet secondary-ink label.
-- **Layer toggle:** balloon plus team code, transparent at rest, branch-line border on hover, ink border and raised paper when pressed, and its balloon fills with the layer colour.
-- **Step tabs:** one connected bar reading Manual > Notebook > Tasks >. A 1.5px top rule runs across the bar, the first tab has a straight left edge, and each tab ends in a 13 × 38 chevron tip that interlocks with the next. The selected tab's rules and both chevrons touching it turn ink, its label goes ink 600, and it breaks the 1.5px ink baseline beneath. A tab whose material is missing carries an empty dashed slot; counts sit in secondary ink.
-- **Phase navigation:** Whole mission, previous and next as standard buttons; arrow keys step Phases and Esc closes.
+### Level Pills (Down column header)
+Phase · Subsystem · Materials · Task on a floating bar. The current depth is a filled grip pill.
 
-### Phase Station (signature)
-The Phase code (600) on a paper station with a 1.5px ink outline. Hover or focus on the Phase head: by day the Earth fills with desk-sky blue; by night the satellite inverts to ink and its wings unfold outward from the body (260ms, `--ease-out`). The Phase name underlines on hover and the workshop count, a bare number in secondary ink, fades in; its space is reserved so nothing shifts. On screens without hover (`@media (hover: none)`, touch) the count is always visible. The detail station shows the art at 64px and does not unfold.
-
-### Sheet Tree
-Leaves are full-width rows: code, name, two slots. Hover fills raised paper and underlines the name. The leaf whose workshop is open inverts to ink, with code and slot dashes mixed toward paper.
-
-### Detail Sheet
-- **Gate box:** "To close Phase X", led by the gate diamond, framed in 1.5px ink like a drawing NOTE block. Review codes in 700 with their names, the source in caption, then numbered steps on an auto-fit grid (min 220px), each with a 20px square numeral boxed in 1.5px ink. Order is the information.
-- **Groups:** balloon, team name and code over a 1px ink rule; a picked layer recolours the rule and doubles it.
-- **Workshop rows:** code column, name and source line, slots and task count, then a separate 32px expand control whose chevron rotates 90° (200ms) to reveal tasks inline, indented under the name, each with a dotted code (C1.2) and a boxed "Notebook" tag where one exists. Expand all / Collapse all act on every row.
-
-### Workshop Panel
-Paper, 1px branch-line left edge, full viewport height. Crumb (Phase > balloon team), icon-only widen and close buttons, headline title with code in secondary ink, source line with the card id. It always opens on Manual. A resource bar (48px) names the material with a New tab or .ipynb action above the viewer. Loading is a 160px, 2px hairline track with an ink segment scanning across (1.4s); reduced motion shows a static bar. Empty material shows the 28px dashed slot, a title and one line; a missing notebook offers only notebooks from the same team.
+### Tool Buttons
+Expand all / Collapse all: 34px, 2px corners, float surface, 1px float-line border.
 
 ### Minimap
-A miniature of the whole tree, fixed 16px from the bottom right, framed in 1.5px ink, following the sheet's orientation. Everything sits in hairline and branch-line grey; the current location lights up: on the sheet every branch, in a detail sheet the trunk up to that Phase and all its branches, with a workshop open the trunk, that team and that workshop only. Lit lines and stations go ink; lit team balloons fill with their layer colour; lit workshop codes are 8px, weight 600, in the ink-mixed layer colour. Stations take the same shape as the sheet's Phase buttons (a circle by day, a square with 1.5px corners by night) and the same hover colours (desk sky by day, ink inversion by night). Stations and codes are clickable. It collapses to a small "Map" button, remembered per browser.
+A miniature of the whole tree on a float surface, with the current path lit in layer colours. It shows no numbers.
 
-### Motion (signature)
-- **Detail transition:** opening a Phase grows a clip from its station to the viewport (700ms, `cubic-bezier(0.45, 0, 0.2, 1)`); closing shrinks it back (480ms, `cubic-bezier(0.5, 0, 0.75, 0.2)`), both with `fill: forwards`. By day the clip is a circle with a synced 1.5px ink ring; by night it is a square inset (3px corners) with a synced 1.5px ink square frame. The default cross-fade is off and scroll is set inside the transition callback so nothing jumps.
-- **Branch move:** opening a workshop from the sheet moves the real Phase head and team branches from the sheet into the branch pane (FLIP, 560ms, `cubic-bezier(0.3, 0, 0, 1)`; teams stagger 32ms when coming from Down). A fixed ghost of the sheet stays behind and fades out while the panel fades from 0.25 to 1 opacity (460ms). Closing reverses it and restores the scroll position.
-- **Orientation flip:** switching Across / Down moves the same parts (620ms, same curve, 28ms per Phase and 18ms per team); connectors and legend reappear at 70% (260ms).
-- **State changes:** 150ms for colour and border, 200ms for layer fades.
-- Under `prefers-reduced-motion` every move is instant.
+### CadSpace (background)
+Groups are pinned to screen corners, so viewport ratio never scales or clips them.
+- **Earth (bottom-right)**: a quarter circle, `clamp(300px, min(32vw, 62vh), 560px)`. It holds an orthographic Australia with Tasmania, a 15° graticule, an R 6,371 km dimension, a dashed LEO orbit with h 500 km, an ACRUX-II satellite node, and an MSP · MELBOURNE target marker.
+- **Moon (bottom-left, above the minimap)**: a small circle with a centre mark.
+- **Sky**: fixed-seed `+` star marks (none over the Earth) and one chain-dotted transfer ellipse with a non-scaling stroke.
 
-### Legend
-"Slots after each workshop" with filled, half-filled and empty slot samples; on the sheet it adds a one-line hint over a hairline.
+### Motion
+- **Expand / collapse:** a height animation on the child list (WAAPI). Opening takes 260–420ms depending on height, on `cubic-bezier(0.16, 1, 0.3, 1)`. Closing takes 220ms on `cubic-bezier(0.4, 0, 0.6, 1)`, with `fill: forwards` so it never flashes full height.
+- **Orientation flip:** Across ↔ Down moves the same parts (620ms, `cubic-bezier(0.3, 0, 0, 1)`, staggered 28ms per Phase and 18ms per team).
+- **Branch move:** opening material moves the Phase head and team pieces (`data-part`) from the tree into the branch pane (FLIP, 560ms, same curve). From Step by step the pieces keep their card shape. A ghost of the tree fades out as the panel fades from 0.25 to 1 (460ms). Closing reverses it.
+- **Phase detail:** a circle clip grows from the station (700ms) and shrinks back (480ms).
+- Every move is instant under `prefers-reduced-motion`.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** separate regions with 1px hairlines or branch lines and a single paper step; let line weight carry hierarchy.
-- **Do** show selection as ink inversion (ink fill, paper text) and focus as the 1.5px dashed ink outline at 2px offset.
-- **Do** keep team colour on balloon rings at rest, and on balloon fills, branch lines and group rules only for the picked layer; fade everything else to opacity 0.5.
-- **Do** pair every team colour with its numbered balloon and its `-on` digit colour, so colour is never the only signal.
-- **Do** draw missing material as a dashed slot and keep it visible; absence is information.
-- **Do** declare every new colour or shape token for Day and for both Night blocks.
-- **Do** animate real elements with FLIP on `cubic-bezier(0.3, 0, 0, 1)`, and make every move instant under reduced motion.
+- **Do** keep the bar warm black with cream pills in both themes, and keep CAD below it.
+- **Do** draw every new connector as a rounded "ㄴ" elbow with its bend equal to the card radius, at `--lw`.
+- **Do** carry a team's identity by layer colour plus code, and let the whole branch take that colour.
+- **Do** use grip blue only for selection and focus.
+- **Do** make anything clickable look like a card or a pill; keep CAD styling for the ground and notation.
+- **Do** declare new colours for Day and Night, and check Night first.
+- **Do** move real elements with FLIP and keep the origin view's shape through a transition.
 
 ### Don't:
-- **Don't** round control or region corners; rounded forms belong to balloons, stations, the transition ring and the satellite.
-- **Don't** add shadows, glows or blur; the floating minimap and the mobile full-screen panel are the only exceptions.
-- **Don't** fill surfaces, buttons or text with team colour, or introduce an accent colour for selection.
-- **Don't** use drawing grammar (balloons, dimension lines, title-block cells) where it carries no data.
-- **Don't** show workshop progress status (done / active / pending); it is intentionally absent.
-- **Don't** use a screenshot cross-fade for a view change; move the elements or clip from the station.
-- **Don't** use cream or warm paper; the paper is cool (hue 240 by day, 262 by night).
+- **Don't** use green, neon or saturated layer colours.
+- **Don't** number teams or show them in an order that implies rank.
+- **Don't** draw diagonal or square-cornered connectors, or let the trunk run past F.
+- **Don't** let a line run behind text; put names beside or below lines.
+- **Don't** add shadows beyond the minimap (and the mobile panel).
+- **Don't** let the background drawing scale with the viewport; pin its groups to corners.
+- **Don't** show workshop progress status.
