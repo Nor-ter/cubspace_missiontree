@@ -4,3 +4,6 @@
 /image
 /memo.md
 /연습용
+# impeccable: local tool files in any folder
+**/.impeccable/hook.cache.json
+**/.impeccable/live/
