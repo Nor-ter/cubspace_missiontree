@@ -53,8 +53,8 @@
   border-radius: 999px;
 }
 
-/* 13~14인치: 팀 코드를 남기는 대신 "Mission:" 라벨을 빼고 로고 · 간격을 줄인다 */
-@media (max-width: 1360px) {
+/* 15인치 이하 (페이지 탭이 들어오며 좁아졌다): 팀 코드를 남기는 대신 "Mission:" 라벨을 빼고 로고 · 간격을 줄인다 */
+@media (max-width: 1500px) {
   :root .topbar {
     gap: 8px;
     padding: 0 12px;

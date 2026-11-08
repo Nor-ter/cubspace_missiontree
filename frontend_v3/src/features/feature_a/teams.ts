@@ -30,3 +30,23 @@ export function buildTeamMap(root: MissionNode): Map<string, string> {
   walk(root)
   return teams
 }
+
+const TEAM_KEY = 'mission-tree.team' // 고른 팀은 이 브라우저에만 기억한다 (미션 트리와 Workflow가 같이 쓴다)
+
+export function readTeam(): string | undefined {
+  try {
+    const t = localStorage.getItem(TEAM_KEY) ?? undefined
+    return TEAMS.some((x) => x.code === t) ? t : undefined
+  } catch {
+    return undefined
+  }
+}
+
+export function saveTeam(code?: string) {
+  try {
+    if (code) localStorage.setItem(TEAM_KEY, code)
+    else localStorage.removeItem(TEAM_KEY)
+  } catch {
+    // 저장이 막힌 브라우저에서는 이번 방문 동안만 기억한다
+  }
+}

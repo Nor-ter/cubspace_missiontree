@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getMissionTree } from '../features/feature_a/api'
 import { buildParentMap, cardId, findWorkshop, notebooksOf } from '../features/feature_a/tree'
-import { TEAMS } from '../features/feature_a/teams'
+import { readTeam, saveTeam } from '../features/feature_a/teams'
 import { useRoute } from '../features/feature_a/hooks/useRoute'
 import { useBranchMotion } from '../features/feature_a/hooks/useBranchMotion'
 import { useOrientMotion } from '../features/feature_a/hooks/useOrientMotion'
@@ -19,8 +19,6 @@ import CadSpace from '../features/feature_a/components/CadSpace'
 import './MissionTreePage.css'
 
 const COHORT = 2026
-const TEAM_KEY = 'mission-tree.team' // 고른 팀은 이 브라우저에만 기억한다
-
 const ORIENT_KEY = 'mission-tree.orient' // 트리 방향도 이 브라우저에만 기억한다
 
 function readOrient(): Orient {
@@ -28,15 +26,6 @@ function readOrient(): Orient {
     return localStorage.getItem(ORIENT_KEY) === 'down' ? 'down' : 'across'
   } catch {
     return 'across'
-  }
-}
-
-function readTeam() {
-  try {
-    const t = localStorage.getItem(TEAM_KEY) ?? undefined
-    return TEAMS.some((x) => x.code === t) ? t : undefined
-  } catch {
-    return undefined
   }
 }
 
@@ -111,12 +100,7 @@ function MissionTreePage() {
 
   const pickTeam = useCallback((code?: string) => {
     setTeam(code)
-    try {
-      if (code) localStorage.setItem(TEAM_KEY, code)
-      else localStorage.removeItem(TEAM_KEY)
-    } catch {
-      // 저장이 막힌 브라우저에서는 이번 방문 동안만 기억한다
-    }
+    saveTeam(code)
   }, [])
 
   const index = phases.findIndex((p) => p.code === route.phase)
@@ -226,6 +210,7 @@ function MissionTreePage() {
       {/* 배경: CAD로 작도한 우주 (모눈 위, 내용 뒤) */}
       <CadSpace />
       <TopBar
+        page="tree"
         mission={tree.title}
         cohort={COHORT}
         team={team}

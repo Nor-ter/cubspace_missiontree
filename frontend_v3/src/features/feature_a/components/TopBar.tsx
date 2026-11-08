@@ -1,4 +1,5 @@
 import { TEAMS } from '../teams'
+import type { Page } from '../../../hooks/usePage'
 import { Balloon, Icon } from './Drawing'
 import './topBar.css'
 
@@ -7,6 +8,7 @@ export type View = 'step' | 'sheet'
 export type Theme = 'day' | 'night' | 'auto'
 
 interface Props {
+  page: Page
   mission: string
   cohort: number
   team?: string
@@ -54,13 +56,23 @@ function ThemeGlyph({ theme, active }: { theme: Theme; active: boolean }) {
   )
 }
 
-// 위 막대: 제품 이름, 미션과 코호트, 팀 레이어
-function TopBar({ mission, cohort, team, onTeam, view, onView, orient, onOrient, theme, onTheme }: Props) {
+// 위 막대: 제품 이름, 페이지(Tree | Workflow), 미션과 코호트, 팀 레이어
+function TopBar({ page, mission, cohort, team, onTeam, view, onView, orient, onOrient, theme, onTheme }: Props) {
   return (
     <header className="topbar">
       <a className="wordmark" href="#/">
         Mission Tree
       </a>
+
+      {/* 페이지 전환. Workflow는 고른 팀으로 바로 연다 */}
+      <nav className="page-switch" aria-label="Page">
+        <a href="#/" aria-current={page === 'tree' ? 'page' : undefined}>
+          Tree
+        </a>
+        <a href={team ? `#/workflow/${team}` : '#/workflow'} aria-current={page === 'workflow' ? 'page' : undefined}>
+          Workflow
+        </a>
+      </nav>
 
       <div className="mission-id">
         <span className="mission-name">
@@ -79,9 +91,17 @@ function TopBar({ mission, cohort, team, onTeam, view, onView, orient, onOrient,
       {view && onView && (
         <div className="orient view-switch" role="group" aria-label="View">
           {(['step', 'sheet'] as const).map((v) => (
-            <button key={v} type="button" aria-pressed={view === v} onClick={() => onView(v)}>
+            // 좁은 화면에서는 아이콘만 남는다 (이름은 마우스를 올리면 보인다)
+            <button
+              key={v}
+              type="button"
+              aria-pressed={view === v}
+              aria-label={v === 'step' ? 'Step by step' : 'Whole sheet'}
+              title={v === 'step' ? 'Step by step' : 'Whole sheet'}
+              onClick={() => onView(v)}
+            >
               <Icon name={v === 'step' ? 'steps' : 'sheet'} />
-              {v === 'step' ? 'Step by step' : 'Whole sheet'}
+              <span className="view-label">{v === 'step' ? 'Step by step' : 'Whole sheet'}</span>
             </button>
           ))}
         </div>

@@ -22,7 +22,8 @@ const TABS: Tab[] = ['tasks', 'manual', 'workshop']
 function parse(hash: string): Route {
   const [path, query = ''] = hash.replace(/^#\/?/, '').split('?')
   const [phase, card, tab, notebook] = path.split('/').map(decodeURIComponent)
-  if (!phase) return {}
+  // #/workflow… 는 다른 페이지(Workflow)의 주소다: 미션 트리에는 아무 화면도 열지 않는다
+  if (!phase || phase === 'workflow') return {}
   if (!card) return { phase }
   const via = new URLSearchParams(query).get('via') === 'sheet' ? 'sheet' : undefined
   return { phase, card, tab: TABS.includes(tab as Tab) ? (tab as Tab) : 'manual', notebook: notebook || undefined, via }
