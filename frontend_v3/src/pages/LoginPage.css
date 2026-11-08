@@ -1,0 +1,147 @@
+/* 로그인: 바깥은 앱의 바탕(모눈), 가운데는 귀퉁이가 잘린 패널 한 장 */
+
+.login {
+  --edge: 20px; /* 화면 가장자리 ~ 패널 */
+  --cut: 72px; /* 잘린 귀퉁이 깊이 */
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* 패널: 왼쪽 위 · 오른쪽 · 왼쪽 아래가 비스듬히 잘린다. 잘린 자리에 회사 이름 · 단계 표시 */
+.login-panel {
+  position: absolute;
+  inset: var(--edge);
+  overflow: hidden;
+  background: var(--paper-2);
+  clip-path: polygon(
+    0 var(--cut),
+    34% var(--cut),
+    calc(34% + var(--cut)) 0,
+    100% 0,
+    100% 30%,
+    calc(100% - var(--cut)) calc(30% + var(--cut)),
+    calc(100% - var(--cut)) calc(70% - var(--cut)),
+    100% 70%,
+    100% 100%,
+    calc(30% + var(--cut)) 100%,
+    30% calc(100% - var(--cut)),
+    0 calc(100% - var(--cut))
+  );
+}
+
+/* 영상 자리: 잘린 귀퉁이(오른쪽 · 아래)를 피한 오른쪽 아래 상자. 그림은 이 안에 통째로 들어온다 */
+.login-panel .film {
+  inset: auto var(--cut) var(--cut) auto;
+  width: 64%;
+  height: calc(100% - var(--cut) * 2);
+}
+
+/* 낮은 화면: 1U · 3U 큰 글자가 역할 단추와 겹치니 뺀다 (오른쪽 세로 글씨 "1U → 3U"가 대신한다) */
+@media (max-height: 760px) and (min-width: 701px) {
+  .login-panel .film-label {
+    display: none;
+  }
+}
+
+.login-mark {
+  position: absolute;
+  top: calc(var(--edge) + 22px);
+  left: calc(var(--edge) + 24px);
+  font-family: var(--font-display);
+  font-size: var(--t-xl);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* 제품 이름 + 역할: 영상 위, 왼쪽 */
+.login-hero {
+  position: absolute;
+  top: calc(var(--cut) + 6vh);
+  left: clamp(24px, 5vw, 80px);
+  right: clamp(24px, 5vw, 80px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start; /* 역할 단추는 제목 윗줄에: 아래쪽은 영상(1U)의 자리다 */
+  gap: 32px clamp(32px, 4vw, 64px);
+}
+
+.login-copy {
+  display: grid;
+  gap: 24px;
+}
+
+/* 위 막대의 제품 이름과 같은 글자 (Archivo, 넓게 · 가장 두껍게 · 대문자) */
+.login-title {
+  font-family: var(--font-display);
+  font-size: clamp(48px, min(9vw, 15vh), 156px); /* 낮고 넓은 화면에서는 높이에 맞춰 줄인다 */
+  font-stretch: 125%;
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.login-lede {
+  max-width: 34ch;
+  color: var(--ink-2);
+  font-size: var(--t-lg);
+  line-height: 1.5;
+}
+
+.login-side {
+  position: absolute;
+  top: 50%;
+  right: calc(var(--edge) + 26px);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  writing-mode: vertical-rl;
+  translate: 0 -50%;
+}
+
+/* 좁은 화면: 귀퉁이를 얕게, 역할은 이름 아래로 */
+@media (max-width: 700px) {
+  .login {
+    --edge: 12px;
+    --cut: 48px;
+  }
+
+  /* 오른쪽 잘린 자리는 버튼을 가리니 빼고, 위 · 아래 귀퉁이만 */
+  .login-panel {
+    clip-path: polygon(
+      0 var(--cut),
+      40% var(--cut),
+      calc(40% + var(--cut)) 0,
+      100% 0,
+      100% 100%,
+      calc(40% + var(--cut)) 100%,
+      40% calc(100% - var(--cut)),
+      0 calc(100% - var(--cut))
+    );
+  }
+
+  /* 영상은 글자 아래 절반에 */
+  .login-panel .film {
+    right: 0;
+    bottom: var(--cut); /* 아래 귀퉁이에 줄기가 걸치지 않게 */
+    width: 100%;
+    height: 40%;
+  }
+
+  .login-mark,
+  .login-side {
+    display: none;
+  }
+
+  .login-hero {
+    top: calc(var(--cut) + 32px);
+  }
+
+  .role-picker {
+    width: 100%;
+  }
+}

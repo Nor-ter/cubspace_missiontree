@@ -1,0 +1,87 @@
+/* 로그인 영상: 펼쳐 보기와 같은 선 · 정거장 · 팀 색으로 그린다 */
+
+.film {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.film path {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.film-trunk {
+  stroke: var(--ink-2);
+  stroke-width: 3;
+}
+
+.film-branch {
+  stroke-width: 3;
+}
+
+.film-edge,
+.film-rail {
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+/* 레일: 모서리보다 굵게 (CubeSat 프레임의 기둥) */
+.film-rail {
+  stroke-width: 5;
+}
+
+/* 가려진 뒤 레일 · 안쪽 보드: 옅게 */
+.film-hidden,
+.film-board {
+  stroke: var(--ink-3);
+  stroke-width: 1.5;
+}
+
+/* 옆판의 창 (CubeSat 옆판의 뚫린 자리) */
+.film-panel {
+  stroke: var(--ink-2);
+  stroke-width: 1.5;
+}
+
+.film-station circle {
+  fill: var(--paper-2);
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.film-station text {
+  fill: var(--ink);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-stretch: 100%;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+.film-label {
+  fill: var(--ink);
+  font-family: var(--font-display);
+  font-size: 56px;
+  font-stretch: 125%;
+  font-weight: 900;
+  text-anchor: middle;
+}
+
+/* Pre-A는 글자가 길다: 펼쳐 보기의 정거장처럼 작게 */
+.film-station text[data-station='Pre-A'] {
+  font-size: 7.5px;
+}
+
+/* 두 번째 미션 트리: 정거장이 작다 */
+.film-station text[data-small] {
+  font-size: 9px;
+}
+
+.film-station text[data-small][data-station='Pre-A'] {
+  font-size: 5.5px;
+}

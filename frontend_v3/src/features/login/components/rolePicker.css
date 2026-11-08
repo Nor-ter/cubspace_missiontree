@@ -1,0 +1,58 @@
+.role-picker {
+  display: grid;
+  gap: 10px;
+  width: 260px;
+}
+
+.role-picker-label {
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 위 막대의 알약 단추처럼: 테두리 → 누르기 전에 채워진다 */
+.role-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 60px;
+  padding: 0 22px 0 26px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: var(--t-lg);
+  font-stretch: 125%;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.role-btn:hover,
+.role-btn:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.role-btn:focus-visible {
+  outline: 1.5px dashed var(--grip);
+  outline-offset: 3px;
+}
+
+.role-btn .icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  transition: translate 150ms var(--ease-out);
+}
+
+.role-btn:hover .icon {
+  translate: 3px 0;
+}
